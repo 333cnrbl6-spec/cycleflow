@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ShieldCheck, Building2, Layers, Activity, Settings, Server, Users, Zap, AlertTriangle, CheckCircle, Search, Plus, X, Edit2 } from 'lucide-react';
+import { ShieldCheck, Building2, Layers, Activity, Settings, Server, Users, Zap, AlertTriangle, CheckCircle, Search, Plus, X, Edit2, BarChart2 } from 'lucide-react';
+import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import StatBlock from '@/components/ui/StatBlock';
@@ -13,6 +14,7 @@ const TABS = [
   { id: 'tenants',      label: 'Tenants',         icon: Building2 },
   { id: 'integrations', label: 'Integrations',    icon: Layers },
   { id: 'analytics',    label: 'Analytics',       icon: Activity },
+  { id: 'handicap',     label: 'Handicap Admin',  icon: BarChart2 },
   { id: 'settings',     label: 'Settings',        icon: Settings },
 ];
 
@@ -332,6 +334,16 @@ export default function SuperAdmin() {
             <StatBlock label="GPX Uploads"    value="12,100" accent="violet" />
             <StatBlock label="SOS Triggers"   value="3"      accent="red" />
           </div>
+        </div>
+      )}
+
+      {/* ── Handicap Admin ── */}
+      {tab === 'handicap' && (
+        <div>
+          <div className="mb-4">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-400/70 bg-blue-500/10 px-2 py-0.5 rounded-full">Platform-Wide Handicap Administration</span>
+          </div>
+          <AdminHandicapTools level="global" />
         </div>
       )}
 

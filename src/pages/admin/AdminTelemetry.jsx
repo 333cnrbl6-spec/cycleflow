@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Activity, Users, Building2, Globe, Globe2, TrendingUp, Zap, Heart, Gauge } from 'lucide-react';
+import { Activity, Users, Building2, Globe, Globe2, TrendingUp, Zap, Heart, Gauge, BarChart2 } from 'lucide-react';
+import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import StatBlock from '@/components/ui/StatBlock';
@@ -14,6 +15,7 @@ const TABS = [
   { id: 'regional',    label: 'Regional',        icon: Users },
   { id: 'federation',  label: 'Federation',      icon: Globe },
   { id: 'global',      label: 'International',   icon: Globe2 },
+  { id: 'handicap',    label: 'Handicap Tools',  icon: BarChart2 },
 ];
 
 // Mock data
@@ -231,6 +233,13 @@ export default function AdminTelemetry() {
             <StatBlock label="Avg Cadence"     value="84"  unit="rpm" accent="cyan" />
             <StatBlock label="Avg Ride Dist."  value="48.2" unit="km" accent="blue" />
           </div>
+        </div>
+      )}
+
+      {/* ── Handicap Tools ── */}
+      {tab === 'handicap' && (
+        <div>
+          <AdminHandicapTools level="federation" />
         </div>
       )}
 
