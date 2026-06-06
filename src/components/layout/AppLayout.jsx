@@ -73,8 +73,10 @@ export default function AppLayout({ user }) {
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto scrollbar-thin overscroll-none">
+          <div className="min-h-full">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

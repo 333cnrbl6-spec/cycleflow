@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 
-const ACCENT_COLORS = {
+const BAR = {
   blue:   'bg-blue-500',
   cyan:   'bg-cyan-500',
   violet: 'bg-violet-500',
@@ -11,17 +11,19 @@ const ACCENT_COLORS = {
 };
 
 /**
- * Standardized section heading for use across all CycleFlow pages.
- * Usage: <SectionLabel accent="blue" label="Live Metrics" right={<span>…</span>} />
+ * Standardised section-heading strip used across all CycleFlow pages.
+ * <SectionLabel accent="blue" label="Live Metrics" right={<span>…</span>} />
  */
 export default function SectionLabel({ label, accent = 'blue', right, className }) {
   return (
     <div className={cn('flex items-center gap-2.5 mb-4', className)}>
-      <div className={cn('w-0.5 h-4 rounded-full flex-shrink-0', ACCENT_COLORS[accent])} />
-      <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80 font-heading">
+      <div className={cn('w-px h-4 rounded-full flex-shrink-0', BAR[accent])} />
+      <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/75 font-heading">
         {label}
       </h2>
-      {right && <div className="ml-auto flex items-center gap-2">{right}</div>}
+      {right && (
+        <div className="ml-auto flex items-center gap-2">{right}</div>
+      )}
     </div>
   );
 }

@@ -109,7 +109,7 @@ export default function Dashboard() {
       {/* Ride History Graph */}
       <section className="mb-8">
         <SectionLabel accent="cyan" label="Ride History" right={<span className="text-xs text-muted-foreground">Last 7 days</span>} />
-        <div className="glass-card rounded-xl border border-white/5 p-5">
+        <div className="glass-card rounded-xl border border-white/[0.06] p-5">
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={rideData}>
               <defs>
@@ -154,7 +154,7 @@ export default function Dashboard() {
       {/* Recent Rides */}
       <section>
         <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
-        <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
+        <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
           <table className="cf-table">
             <thead>
               <tr>

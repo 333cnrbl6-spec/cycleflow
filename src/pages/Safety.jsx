@@ -126,20 +126,20 @@ export default function Safety() {
         <div className="space-y-4">
           {/* Past incidents */}
           {PAST_INCIDENTS.length > 0 && (
-            <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-              <div className="p-4 border-b border-border flex items-center gap-2">
-                <AlertOctagon className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-semibold text-foreground">Previous Reports</span>
+            <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+              <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
+                <AlertOctagon className="w-3.5 h-3.5 text-amber-400" />
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Previous Reports</span>
               </div>
               {PAST_INCIDENTS.map((inc, i) => (
-                <div key={i} className="px-4 py-3 border-b border-border/30 last:border-0 flex items-center justify-between hover:bg-white/3">
+                <div key={i} className="px-4 py-3 border-b border-border/20 last:border-0 flex items-center justify-between hover:bg-white/[0.025] transition-colors">
                   <div>
                     <p className="text-sm font-medium text-foreground">{inc.type}</p>
-                    <p className="text-xs text-muted-foreground">{inc.date}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{inc.date}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${inc.severity === 'Medium' ? 'bg-amber-500/10 text-amber-400' : 'bg-green-500/10 text-green-400'}`}>{inc.severity}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${inc.status === 'Resolved' ? 'bg-green-500/10 text-green-400' : 'bg-blue-500/10 text-blue-400'}`}>{inc.status}</span>
+                    <span className={`badge ${inc.severity === 'Medium' ? 'bg-amber-500/10 text-amber-400' : 'bg-green-500/10 text-green-400'}`}>{inc.severity}</span>
+                    <span className={`badge ${inc.status === 'Resolved' ? 'bg-green-500/10 text-green-400' : 'bg-blue-500/10 text-blue-400'}`}>{inc.status}</span>
                   </div>
                 </div>
               ))}

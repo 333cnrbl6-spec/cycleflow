@@ -116,25 +116,25 @@ export default function AdminTelemetry() {
 
           {/* Top performers table */}
           <PlaceholderCard title="Top Performers — This Month" description="Club member performance rankings" icon={Activity} accent="blue">
-            <div className="mt-3 overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="mt-3 overflow-x-auto -mx-1">
+              <table className="cf-table">
                 <thead>
-                  <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                    <th className="text-left py-2">Rider</th>
-                    <th className="text-right py-2">Distance</th>
-                    <th className="text-right py-2 hidden sm:table-cell">Avg Power</th>
-                    <th className="text-right py-2 hidden md:table-cell">Avg HR</th>
-                    <th className="text-right py-2">Rides</th>
+                  <tr>
+                    <th className="text-left">Rider</th>
+                    <th className="text-right">Distance</th>
+                    <th className="text-right hidden sm:table-cell">Avg Power</th>
+                    <th className="text-right hidden md:table-cell">Avg HR</th>
+                    <th className="text-right">Rides</th>
                   </tr>
                 </thead>
                 <tbody>
                   {TOP_PERFORMERS.map((p, i) => (
-                    <tr key={i} className="border-b border-border/30 hover:bg-white/3">
-                      <td className="py-2.5 font-medium text-foreground">{p.name}</td>
-                      <td className="py-2.5 text-right text-blue-400 font-mono">{p.km} km</td>
-                      <td className="py-2.5 text-right text-violet-400 font-mono hidden sm:table-cell">{p.power}</td>
-                      <td className="py-2.5 text-right text-red-400 font-mono hidden md:table-cell">{p.hr}</td>
-                      <td className="py-2.5 text-right text-muted-foreground">{p.rides}</td>
+                    <tr key={i}>
+                      <td className="font-medium text-foreground">{p.name}</td>
+                      <td className="text-right text-blue-400 font-mono font-semibold">{p.km} km</td>
+                      <td className="text-right text-violet-400 font-mono hidden sm:table-cell">{p.power}</td>
+                      <td className="text-right text-red-400 font-mono hidden md:table-cell">{p.hr}</td>
+                      <td className="text-right text-muted-foreground">{p.rides}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -168,9 +168,9 @@ export default function AdminTelemetry() {
             </div>
           </PlaceholderCard>
 
-          <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-            <div className="px-4 py-3 border-b border-border">
-              <span className="text-sm font-semibold text-foreground">Club Telemetry Summary</span>
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
+              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Club Telemetry Summary</span>
             </div>
             <table className="cf-table">
               <thead>
@@ -183,11 +183,11 @@ export default function AdminTelemetry() {
               </thead>
               <tbody>
                 {CLUB_COMPARISON.map((c, i) => (
-                  <tr key={i} className="border-b border-border/30 hover:bg-white/3">
-                    <td className="px-4 py-3 font-medium text-foreground">{c.name}</td>
-                    <td className="px-4 py-3 text-right text-blue-400 font-mono">{c.avgKm} km</td>
-                    <td className="px-4 py-3 text-right text-violet-400 font-mono hidden sm:table-cell">{c.avgPower}W</td>
-                    <td className="px-4 py-3 text-right">
+                  <tr key={i}>
+                    <td className="font-medium text-foreground">{c.name}</td>
+                    <td className="text-right text-blue-400 font-mono font-semibold">{c.avgKm} km</td>
+                    <td className="text-right text-violet-400 font-mono hidden sm:table-cell">{c.avgPower}W</td>
+                    <td className="text-right">
                       <span className={`text-xs font-mono font-bold ${c.compliance >= 90 ? 'text-green-400' : c.compliance >= 75 ? 'text-amber-400' : 'text-red-400'}`}>{c.compliance}%</span>
                     </td>
                   </tr>

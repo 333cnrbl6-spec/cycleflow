@@ -180,7 +180,7 @@ export default function SuperAdmin() {
           </div>
 
           {/* Table */}
-          <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
             <table className="cf-table">
               <thead>
                 <tr>
@@ -242,7 +242,7 @@ export default function SuperAdmin() {
               <Plus className="w-4 h-4" /> Provision Tenant
             </button>
           </div>
-          <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
             <table className="cf-table">
               <thead>
                 <tr>

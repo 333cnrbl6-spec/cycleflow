@@ -6,157 +6,201 @@
 
 @layer base {
   :root {
-    --background: 215 28% 7%;
-    --foreground: 210 40% 98%;
-    --card: 217 33% 10%;
-    --card-foreground: 210 40% 98%;
-    --popover: 217 33% 10%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 14%;
+    --background:           215 28% 7%;
+    --foreground:           210 40% 98%;
+    --card:                 217 33% 10%;
+    --card-foreground:      210 40% 98%;
+    --popover:              217 33% 10%;
+    --popover-foreground:   210 40% 98%;
+    --primary:              217 91% 60%;
+    --primary-foreground:   0 0% 100%;
+    --secondary:            217 33% 14%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 186 100% 42%;
-    --accent-foreground: 215 28% 7%;
-    --destructive: 0 72% 51%;
+    --muted:                217 33% 14%;
+    --muted-foreground:     215 20% 55%;
+    --accent:               186 100% 42%;
+    --accent-foreground:    215 28% 7%;
+    --destructive:          0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 217 33% 17%;
-    --input: 217 33% 14%;
-    --ring: 217 91% 60%;
-    --chart-1: 217 91% 60%;
-    --chart-2: 186 100% 42%;
-    --chart-3: 262 80% 65%;
-    --chart-4: 43 96% 56%;
-    --chart-5: 0 72% 51%;
-    --radius: 0.5rem;
-    --sidebar-bg: 217 40% 8%;
-    --sidebar-border: 217 33% 15%;
+    --border:               217 33% 17%;
+    --input:                217 33% 14%;
+    --ring:                 217 91% 60%;
+    --chart-1:              217 91% 60%;
+    --chart-2:              186 100% 42%;
+    --chart-3:              262 80% 65%;
+    --chart-4:              43 96% 56%;
+    --chart-5:              0 72% 51%;
+    --radius:               0.5rem;
+    --sidebar-bg:           217 40% 8%;
+    --sidebar-border:       217 33% 15%;
     --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-body:    'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-mono:    'JetBrains Mono', ui-monospace, monospace;
   }
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  * { @apply border-border outline-ring/50; }
   body {
     @apply bg-background text-foreground font-body;
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+  /* Better select appearance on dark backgrounds */
+  select option { background-color: hsl(217 33% 12%); color: hsl(210 40% 98%); }
+}
+
+@layer components {
+
+  /* ── Glass card ─────────────────────────────────────── */
+  .glass-card {
+    background: rgba(14, 20, 33, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(51, 65, 85, 0.45);
+  }
+
+  /* ── Form controls ──────────────────────────────────── */
+  .cf-input {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+           text-sm text-foreground placeholder:text-muted-foreground/60
+           focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.07]
+           transition-all duration-150;
+  }
+  .cf-select {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+           text-sm text-foreground
+           focus:outline-none focus:border-blue-500/60
+           transition-all duration-150 cursor-pointer appearance-none;
+  }
+  .cf-textarea {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+           text-sm text-foreground placeholder:text-muted-foreground/60
+           focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.07]
+           resize-none transition-all duration-150;
+  }
+  .cf-label {
+    @apply block text-xs font-semibold text-muted-foreground mb-1.5 tracking-wide;
+  }
+
+  /* ── Buttons ────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 rounded-xl
+           bg-blue-500 hover:bg-blue-600 active:bg-blue-700
+           text-white text-sm font-semibold
+           transition-all duration-150 active:scale-[0.97]
+           focus:outline-none focus:ring-2 focus:ring-blue-500/40;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 rounded-xl border border-border
+           bg-transparent text-muted-foreground
+           hover:text-foreground hover:border-white/25 hover:bg-white/5
+           text-sm font-medium
+           transition-all duration-150 active:scale-[0.97]
+           focus:outline-none;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2
+           px-3 py-2 rounded-lg
+           text-muted-foreground hover:text-foreground hover:bg-white/5
+           text-sm font-medium
+           transition-all duration-150
+           focus:outline-none;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 rounded-xl
+           bg-red-500 hover:bg-red-600 active:bg-red-700
+           text-white text-sm font-semibold
+           transition-all duration-150 active:scale-[0.97]
+           focus:outline-none focus:ring-2 focus:ring-red-500/40;
+  }
+  .btn-icon {
+    @apply inline-flex items-center justify-center
+           w-8 h-8 rounded-lg
+           text-muted-foreground hover:text-foreground hover:bg-white/5
+           transition-all duration-150 focus:outline-none;
+  }
+
+  /* ── Section labels ─────────────────────────────────── */
+  .section-label {
+    @apply flex items-center gap-2.5 mb-4;
+  }
+  .section-label-bar {
+    @apply w-px h-4 rounded-full flex-shrink-0;
+  }
+  .section-label-text {
+    @apply text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70 font-heading;
+  }
+
+  /* ── Tables ─────────────────────────────────────────── */
+  .cf-table { @apply w-full text-sm; }
+  .cf-table thead tr   { @apply border-b border-border/60; }
+  .cf-table thead th   {
+    @apply text-[10px] font-bold uppercase tracking-wider
+           text-muted-foreground/70 py-3 px-4 whitespace-nowrap;
+  }
+  .cf-table tbody tr   {
+    @apply border-b border-border/20 hover:bg-white/[0.025] transition-colors duration-100;
+  }
+  .cf-table tbody td   { @apply py-3 px-4; }
+  .cf-table tbody tr:last-child { @apply border-b-0; }
+
+  /* ── Badge pill ─────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1 text-[10px] font-bold
+           px-2 py-0.5 rounded-full tracking-wide;
+  }
+
+  /* ── Modal overlay ──────────────────────────────────── */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/65 backdrop-blur-sm z-50
+           flex items-center justify-center p-4;
+  }
+  .modal-panel {
+    @apply bg-card border border-border rounded-2xl w-full shadow-2xl page-enter;
+  }
+  .modal-header {
+    @apply flex items-center justify-between px-5 py-4 border-b border-border;
+  }
+  .modal-body { @apply p-5 space-y-3; }
+
+  /* ── Card divider ───────────────────────────────────── */
+  .card-divider { @apply border-t border-border/40 my-3; }
 }
 
 @layer utilities {
-  .glow-blue {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.05);
-  }
-  .glow-cyan {
-    box-shadow: 0 0 20px rgba(34, 211, 238, 0.15), 0 0 40px rgba(34, 211, 238, 0.05);
-  }
-  .glow-red {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.25), 0 0 40px rgba(239, 68, 68, 0.1);
-  }
+
+  /* ── Glows ──────────────────────────────────────────── */
+  .glow-blue { box-shadow: 0 0 24px rgba(59,130,246,0.18), 0 0 48px rgba(59,130,246,0.06); }
+  .glow-cyan { box-shadow: 0 0 24px rgba(34,211,238,0.18), 0 0 48px rgba(34,211,238,0.06); }
+  .glow-red  { box-shadow: 0 0 24px rgba(239,68,68,0.28),  0 0 48px rgba(239,68,68,0.10); }
+
+  /* ── Sidebar state ──────────────────────────────────── */
   .sidebar-active {
     @apply bg-blue-500/10 text-blue-400 border-l-2 border-blue-500;
   }
-  .glass-card {
-    background: rgba(16, 22, 36, 0.85);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(51, 65, 85, 0.5);
-  }
-  .metric-glow {
-    animation: metricPulse 3s ease-in-out infinite;
-  }
+
+  /* ── Animations ─────────────────────────────────────── */
+  .metric-glow { animation: metricPulse 3s ease-in-out infinite; }
   @keyframes metricPulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.75; }
+    50%       { opacity: 0.72; }
   }
-  .page-enter {
-    animation: pageEnter 0.25s ease-out;
-  }
+  .page-enter { animation: pageEnter 0.22s ease-out; }
   @keyframes pageEnter {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(5px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── Unified form inputs ────────────────────────────── */
-  .cf-input {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
-           placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/60 focus:bg-white/10
-           transition-colors;
-  }
-  .cf-select {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
-           focus:outline-none focus:border-blue-500/60 transition-colors cursor-pointer;
-  }
-  .cf-textarea {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
-           placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/60
-           resize-none transition-colors;
-  }
-  .cf-label {
-    @apply block text-xs font-medium text-muted-foreground mb-1.5 tracking-wide;
-  }
-
-  /* ── Unified buttons ────────────────────────────────── */
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600
-           text-white text-sm font-semibold rounded-xl transition-all duration-150
-           focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98];
-  }
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 border border-border
-           text-muted-foreground hover:text-foreground hover:border-foreground/30
-           text-sm font-medium rounded-xl transition-all duration-150 bg-transparent
-           focus:outline-none active:scale-[0.98];
-  }
-  .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-3 py-2 text-muted-foreground
-           hover:text-foreground hover:bg-white/5 text-sm font-medium rounded-lg
-           transition-all duration-150 focus:outline-none;
-  }
-  .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600
-           text-white text-sm font-semibold rounded-xl transition-all duration-150
-           focus:outline-none active:scale-[0.98];
-  }
-
-  /* ── Unified section label ──────────────────────────── */
-  .section-label {
-    @apply flex items-center gap-2 mb-4;
-  }
-  .section-label-bar {
-    @apply w-0.5 h-4 rounded-full;
-  }
-  .section-label-text {
-    @apply text-xs font-bold uppercase tracking-widest text-muted-foreground/80;
-  }
-
-  /* ── Table ──────────────────────────────────────────── */
-  .cf-table {
-    @apply w-full text-sm;
-  }
-  .cf-table thead tr {
-    @apply border-b border-border;
-  }
-  .cf-table thead th {
-    @apply text-xs text-muted-foreground font-semibold uppercase tracking-wider py-3 px-4;
-  }
-  .cf-table tbody tr {
-    @apply border-b border-border/30 hover:bg-white/[0.02] transition-colors;
-  }
-  .cf-table tbody td {
-    @apply py-3 px-4 text-sm;
-  }
-
-  /* ── Scrollbar ──────────────────────────────────────── */
-  .scrollbar-thin::-webkit-scrollbar        { width: 4px; height: 4px; }
-  .scrollbar-thin::-webkit-scrollbar-track  { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb  { background: rgba(51,65,85,0.6); border-radius: 9999px; }
-  .scrollbar-none::-webkit-scrollbar        { display: none; }
+  /* ── Scrollbars ─────────────────────────────────────── */
+  .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(51,65,85,0.55); border-radius: 9999px; }
+  .scrollbar-none::-webkit-scrollbar       { display: none; }
+  .scrollbar-none { scrollbar-width: none; }
 }

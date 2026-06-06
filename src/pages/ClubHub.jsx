@@ -230,32 +230,32 @@ export default function ClubHub() {
 
       {/* ── Leaderboard ── */}
       {tab === 'leaderboard' && (
-        <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-          <div className="p-4 border-b border-border flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-semibold text-foreground">June 2026 — Monthly Leaderboard</span>
+        <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+          <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
+            <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">June 2026 — Monthly Leaderboard</span>
           </div>
-          <table className="w-full text-sm">
+          <table className="cf-table">
             <thead>
-              <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                <th className="text-left px-4 py-3">Rank</th>
-                <th className="text-left px-4 py-3">Rider</th>
-                <th className="text-right px-4 py-3">Distance</th>
-                <th className="text-right px-4 py-3 hidden sm:table-cell">Rides</th>
+              <tr>
+                <th className="text-left">Rank</th>
+                <th className="text-left">Rider</th>
+                <th className="text-right">Distance</th>
+                <th className="text-right hidden sm:table-cell">Rides</th>
               </tr>
             </thead>
             <tbody>
               {LEADERBOARD.map((e, i) => (
-                <tr key={i} className={`border-b border-border/30 transition-colors ${e.name.includes('You') ? 'bg-blue-500/5' : 'hover:bg-white/3'}`}>
-                  <td className="px-4 py-3">
+                <tr key={i} className={e.name.includes('You') ? '!bg-blue-500/5' : ''}>
+                  <td>
                     {e.badge ? <span className="text-xl">{e.badge}</span> : <span className="text-sm text-muted-foreground font-mono">{e.rank}</span>}
                   </td>
-                  <td className="px-4 py-3 font-medium text-foreground">
+                  <td className="font-medium text-foreground">
                     {e.name}
-                    {e.name.includes('You') && <span className="ml-2 text-xs text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded-full">You</span>}
+                    {e.name.includes('You') && <span className="ml-2 badge bg-blue-500/10 text-blue-400">You</span>}
                   </td>
-                  <td className="px-4 py-3 text-right text-blue-400 font-mono">{e.km} km</td>
-                  <td className="px-4 py-3 text-right text-muted-foreground hidden sm:table-cell">{e.rides}</td>
+                  <td className="text-right text-blue-400 font-mono font-semibold">{e.km} km</td>
+                  <td className="text-right text-muted-foreground hidden sm:table-cell">{e.rides}</td>
                 </tr>
               ))}
             </tbody>
