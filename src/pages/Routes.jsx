@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, Navigation, TrendingUp, Trophy, ArrowLeftRight } from 'lucide-react';
+import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, Navigation, TrendingUp, Trophy, ArrowLeftRight, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
@@ -114,9 +115,9 @@ export default function Routes() {
             </div>
           </div>
           <div className="flex gap-2">
-            <button className="flex-1 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
-              <Navigation className="w-4 h-4" /> Start Ride
-            </button>
+            <Link to="/ride" className="flex-1 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+              <Zap className="w-4 h-4" /> Start Ride
+            </Link>
             <button className="px-4 py-2.5 border border-border text-muted-foreground text-sm rounded-lg hover:text-foreground hover:border-foreground/30 transition-colors flex items-center gap-2">
               <Download className="w-4 h-4" /> GPX
             </button>

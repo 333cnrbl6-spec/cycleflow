@@ -16,6 +16,7 @@ import Telemetry from '@/pages/Telemetry';
 import ClubHub from '@/pages/ClubHub';
 import SettingsPage from '@/pages/Settings';
 import Training from '@/pages/Training';
+import Ride from '@/pages/Ride';
 
 import Handicap from '@/pages/Handicap';
 
@@ -64,6 +65,7 @@ const AuthenticatedApp = () => {
         <Route path="/telemetry"  element={<Telemetry />} />
         <Route path="/club-hub"   element={<ClubHub />} />
         <Route path="/training"   element={<Training />} />
+        <Route path="/ride"       element={<Ride />} />
         <Route path="/handicap"   element={<Handicap />} />
         <Route path="/settings"   element={<SettingsPage />} />
 

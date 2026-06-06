@@ -21,7 +21,7 @@ const STATIC_RECENT_RIDES = [
 ];
 
 const QUICK_ACTIONS = [
-  { icon: Play,       label: 'Start Ride',    desc: 'Begin a new ride session',      color: 'text-blue-400',  bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20',  path: '/telemetry' },
+  { icon: Play,       label: 'Start Ride',    desc: 'Begin a new ride session',      color: 'text-blue-400',  bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20',  path: '/ride' },
   { icon: Bluetooth,  label: 'Pair Bike',     desc: 'Connect your bicycle sensors',  color: 'text-cyan-400',  bg: 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/20',   path: '/my-bike' },
   { icon: ShieldCheck,label: 'Safety Check',  desc: 'Run pre-ride inspection',       color: 'text-green-400', bg: 'bg-green-500/10 hover:bg-green-500/20 border-green-500/20', path: '/safety' },
 ];
