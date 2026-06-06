@@ -157,18 +157,16 @@ export default function SuperAdmin() {
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
               <input value={search} onChange={e => setSearch(e.target.value)}
                 placeholder="Search users by name or email…"
-                className="w-full pl-9 pr-3 py-2 bg-white/5 border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/50" />
+                className="cf-input pl-9" />
             </div>
-            <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)}
-              className="bg-white/5 border border-border rounded-lg px-3 py-2 text-sm text-foreground">
+            <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="cf-select sm:w-48">
               <option value="all">All Roles</option>
               {ROLES.map(r => <option key={r} value={r}>{ROLE_META[r].label}</option>)}
             </select>
-            <button onClick={() => setShowInvite(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-colors flex-shrink-0">
+            <button onClick={() => setShowInvite(true)} className="btn-danger flex-shrink-0">
               <Plus className="w-4 h-4" /> Invite User
             </button>
           </div>
@@ -183,15 +181,15 @@ export default function SuperAdmin() {
 
           {/* Table */}
           <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="cf-table">
               <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                  <th className="text-left px-4 py-3">User</th>
-                  <th className="text-left px-4 py-3 hidden sm:table-cell">Tenant</th>
-                  <th className="text-left px-4 py-3">Role</th>
-                  <th className="text-center px-4 py-3 hidden md:table-cell">Status</th>
-                  <th className="text-right px-4 py-3 hidden md:table-cell">Last Active</th>
-                  <th className="text-right px-4 py-3">Actions</th>
+                <tr>
+                  <th className="text-left">User</th>
+                  <th className="text-left hidden sm:table-cell">Tenant</th>
+                  <th className="text-left">Role</th>
+                  <th className="text-center hidden md:table-cell">Status</th>
+                  <th className="text-right hidden md:table-cell">Last Active</th>
+                  <th className="text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -240,20 +238,20 @@ export default function SuperAdmin() {
       {tab === 'tenants' && (
         <div className="space-y-4">
           <div className="flex justify-end">
-            <button className="flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded-lg transition-colors">
-              <Plus className="w-3.5 h-3.5" /> Provision Tenant
+            <button className="btn-danger">
+              <Plus className="w-4 h-4" /> Provision Tenant
             </button>
           </div>
           <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="cf-table">
               <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                  <th className="text-left px-4 py-3">Tenant</th>
-                  <th className="text-left px-4 py-3 hidden sm:table-cell">Type</th>
-                  <th className="text-right px-4 py-3 hidden md:table-cell">Users</th>
-                  <th className="text-left px-4 py-3 hidden md:table-cell">Plan</th>
-                  <th className="text-center px-4 py-3">Status</th>
-                  <th className="text-right px-4 py-3">Action</th>
+                <tr>
+                  <th className="text-left">Tenant</th>
+                  <th className="text-left hidden sm:table-cell">Type</th>
+                  <th className="text-right hidden md:table-cell">Users</th>
+                  <th className="text-left hidden md:table-cell">Plan</th>
+                  <th className="text-center">Status</th>
+                  <th className="text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -423,27 +421,23 @@ export default function SuperAdmin() {
             </div>
             <div className="p-5 space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Email Address *</label>
+                <label className="cf-label">Email Address *</label>
                 <input value={inviteForm.email} onChange={e => setInviteForm(p=>({...p,email:e.target.value}))}
-                  placeholder="user@organisation.com"
-                  className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/50" />
+                  placeholder="user@organisation.com" className="cf-input" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Role</label>
-                <select value={inviteForm.role} onChange={e => setInviteForm(p=>({...p,role:e.target.value}))}
-                  className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                <label className="cf-label">Role</label>
+                <select value={inviteForm.role} onChange={e => setInviteForm(p=>({...p,role:e.target.value}))} className="cf-select">
                   {ROLES.map(r => <option key={r} value={r}>{ROLE_META[r].label}</option>)}
                 </select>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Assign to Tenant</label>
-                <select value={inviteForm.tenant} onChange={e => setInviteForm(p=>({...p,tenant:e.target.value}))}
-                  className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                <label className="cf-label">Assign to Tenant</label>
+                <select value={inviteForm.tenant} onChange={e => setInviteForm(p=>({...p,tenant:e.target.value}))} className="cf-select">
                   {TENANTS.map(t => <option key={t.name}>{t.name}</option>)}
                 </select>
               </div>
-              <button onClick={() => setShowInvite(false)}
-                className="w-full py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-colors">
+              <button onClick={() => setShowInvite(false)} className="btn-danger w-full">
                 Send Invitation
               </button>
             </div>

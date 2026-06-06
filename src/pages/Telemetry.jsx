@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Activity, Gauge, Zap, Heart, Battery, Wifi, WifiOff } from 'lucide-react';
+import { Activity, Gauge, Zap, Heart, Wifi, WifiOff } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
+import SectionLabel from '@/components/ui/SectionLabel';
 import {
   LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -131,7 +132,7 @@ export default function Telemetry() {
 
       {/* ── Section 1: Live Metric StatBlocks ──────────────────────────── */}
       <section className="mb-8">
-        <SectionLabel color="bg-blue-500" label="Live Metrics" />
+        <SectionLabel accent="blue" label="Live Metrics" />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {SENSORS.map(s => {
             const current = series[s.key].at(-1)?.v ?? s.base;
@@ -168,7 +169,7 @@ export default function Telemetry() {
 
       {/* ── Section 2: Sensor Health & Battery ─────────────────────────── */}
       <section className="mb-8">
-        <SectionLabel color="bg-amber-500" label="Sensor Health" />
+        <SectionLabel accent="amber" label="Sensor Health" />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {batteries.map(b => {
             const { text, bar } = batteryColor(b.pct);
@@ -216,7 +217,7 @@ export default function Telemetry() {
 
       {/* ── Section 3: Real-Time Area Charts ───────────────────────────── */}
       <section>
-        <SectionLabel color="bg-violet-500" label="Real-Time Performance" />
+        <SectionLabel accent="violet" label="Real-Time Performance" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {SENSORS.map(s => {
             const current = series[s.key].at(-1)?.v ?? s.base;
@@ -288,15 +289,6 @@ export default function Telemetry() {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-function SectionLabel({ color, label }) {
-  return (
-    <div className="flex items-center gap-2 mb-4">
-      <div className={`w-1 h-4 ${color} rounded-full`} />
-      <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide font-heading">{label}</h2>
-    </div>
-  );
-}
 
 function ChartFooter({ data, color, unit }) {
   const values = data.map(d => d.v);

@@ -65,22 +65,98 @@
     @apply bg-blue-500/10 text-blue-400 border-l-2 border-blue-500;
   }
   .glass-card {
-    background: rgba(22, 29, 43, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(51, 65, 85, 0.6);
+    background: rgba(16, 22, 36, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(51, 65, 85, 0.5);
   }
   .metric-glow {
     animation: metricPulse 3s ease-in-out infinite;
   }
   @keyframes metricPulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    50% { opacity: 0.75; }
   }
   .page-enter {
-    animation: pageEnter 0.2s ease-out;
+    animation: pageEnter 0.25s ease-out;
   }
   @keyframes pageEnter {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* ── Unified form inputs ────────────────────────────── */
+  .cf-input {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
+           placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/60 focus:bg-white/10
+           transition-colors;
+  }
+  .cf-select {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
+           focus:outline-none focus:border-blue-500/60 transition-colors cursor-pointer;
+  }
+  .cf-textarea {
+    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground
+           placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/60
+           resize-none transition-colors;
+  }
+  .cf-label {
+    @apply block text-xs font-medium text-muted-foreground mb-1.5 tracking-wide;
+  }
+
+  /* ── Unified buttons ────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600
+           text-white text-sm font-semibold rounded-xl transition-all duration-150
+           focus:outline-none focus:ring-2 focus:ring-blue-500/50 active:scale-[0.98];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 border border-border
+           text-muted-foreground hover:text-foreground hover:border-foreground/30
+           text-sm font-medium rounded-xl transition-all duration-150 bg-transparent
+           focus:outline-none active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 text-muted-foreground
+           hover:text-foreground hover:bg-white/5 text-sm font-medium rounded-lg
+           transition-all duration-150 focus:outline-none;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600
+           text-white text-sm font-semibold rounded-xl transition-all duration-150
+           focus:outline-none active:scale-[0.98];
+  }
+
+  /* ── Unified section label ──────────────────────────── */
+  .section-label {
+    @apply flex items-center gap-2 mb-4;
+  }
+  .section-label-bar {
+    @apply w-0.5 h-4 rounded-full;
+  }
+  .section-label-text {
+    @apply text-xs font-bold uppercase tracking-widest text-muted-foreground/80;
+  }
+
+  /* ── Table ──────────────────────────────────────────── */
+  .cf-table {
+    @apply w-full text-sm;
+  }
+  .cf-table thead tr {
+    @apply border-b border-border;
+  }
+  .cf-table thead th {
+    @apply text-xs text-muted-foreground font-semibold uppercase tracking-wider py-3 px-4;
+  }
+  .cf-table tbody tr {
+    @apply border-b border-border/30 hover:bg-white/[0.02] transition-colors;
+  }
+  .cf-table tbody td {
+    @apply py-3 px-4 text-sm;
+  }
+
+  /* ── Scrollbar ──────────────────────────────────────── */
+  .scrollbar-thin::-webkit-scrollbar        { width: 4px; height: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track  { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb  { background: rgba(51,65,85,0.6); border-radius: 9999px; }
+  .scrollbar-none::-webkit-scrollbar        { display: none; }
 }

@@ -294,37 +294,36 @@ export default function ClubHub() {
             </div>
             <div className="p-5 space-y-3">
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Event Name *</label>
-                <input placeholder="e.g. Saturday Club Ride" className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/50" />
+                <label className="cf-label">Event Name *</label>
+                <input placeholder="e.g. Saturday Club Ride" className="cf-input" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Event Type</label>
-                  <select className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                  <label className="cf-label">Event Type</label>
+                  <select className="cf-select">
                     {['Ride','Training','Race','Social','Sportive'].map(t => <option key={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Max Capacity</label>
-                  <input type="number" defaultValue={20} className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground" />
+                  <label className="cf-label">Max Capacity</label>
+                  <input type="number" defaultValue={20} className="cf-input" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Date</label>
-                  <input type="date" className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground" />
+                  <label className="cf-label">Date</label>
+                  <input type="date" className="cf-input" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Start Time</label>
-                  <input type="time" defaultValue="08:00" className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground" />
+                  <label className="cf-label">Start Time</label>
+                  <input type="time" defaultValue="08:00" className="cf-input" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Meeting Location</label>
-                <input placeholder="e.g. Town Hall Car Park" className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground" />
+                <label className="cf-label">Meeting Location</label>
+                <input placeholder="e.g. Town Hall Car Park" className="cf-input" />
               </div>
-              <button onClick={() => setShowCreate(false)}
-                className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors">
+              <button onClick={() => setShowCreate(false)} className="btn-primary w-full">
                 Create Event
               </button>
             </div>

@@ -164,9 +164,8 @@ export default function Safety() {
               <div className="mt-4 space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-muted-foreground block mb-1.5">Incident Type *</label>
-                    <select value={incidentForm.type} onChange={e => setIncidentForm(p => ({...p, type: e.target.value}))}
-                      className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                    <label className="cf-label">Incident Type *</label>
+                    <select value={incidentForm.type} onChange={e => setIncidentForm(p => ({...p, type: e.target.value}))} className="cf-select">
                       <option value="">Select type…</option>
                       <option>Near-miss — vehicle</option>
                       <option>Near-miss — pedestrian</option>
@@ -177,35 +176,31 @@ export default function Safety() {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground block mb-1.5">Severity</label>
-                    <select value={incidentForm.severity} onChange={e => setIncidentForm(p => ({...p, severity: e.target.value}))}
-                      className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                    <label className="cf-label">Severity</label>
+                    <select value={incidentForm.severity} onChange={e => setIncidentForm(p => ({...p, severity: e.target.value}))} className="cf-select">
                       <option>Low</option><option>Medium</option><option>High</option><option>Critical</option>
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Date & Time</label>
-                  <input type="datetime-local" value={incidentForm.datetime} onChange={e => setIncidentForm(p => ({...p, datetime: e.target.value}))}
-                    className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground" />
+                  <label className="cf-label">Date & Time</label>
+                  <input type="datetime-local" value={incidentForm.datetime} onChange={e => setIncidentForm(p => ({...p, datetime: e.target.value}))} className="cf-input" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Location</label>
+                  <label className="cf-label">Location</label>
                   <input type="text" value={incidentForm.location} onChange={e => setIncidentForm(p => ({...p, location: e.target.value}))}
-                    placeholder="GPS auto-detected or enter manually"
-                    className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground" />
+                    placeholder="GPS auto-detected or enter manually" className="cf-input" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted-foreground block mb-1.5">Description *</label>
+                  <label className="cf-label">Description *</label>
                   <textarea rows={3} value={incidentForm.description} onChange={e => setIncidentForm(p => ({...p, description: e.target.value}))}
-                    placeholder="Describe what happened in as much detail as possible…"
-                    className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground resize-none" />
+                    placeholder="Describe what happened in as much detail as possible…" className="cf-textarea" />
                 </div>
                 <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20">
                   <p className="text-xs text-blue-400">Your GPS location, ride data snapshot, and sensor logs will be automatically attached to this report.</p>
                 </div>
                 <button onClick={() => setIncidentForm(p => ({...p, submitted: true}))}
-                  className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                  className="w-full inline-flex items-center justify-center py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-xl transition-all duration-150 active:scale-[0.98]">
                   Submit Incident Report
                 </button>
               </div>

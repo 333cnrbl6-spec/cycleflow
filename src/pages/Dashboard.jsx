@@ -1,7 +1,7 @@
-import { LayoutDashboard, Play, Bluetooth, ShieldCheck, ChevronRight, TrendingUp, Users, Globe, Layers } from 'lucide-react';
+import { LayoutDashboard, Play, Bluetooth, ShieldCheck, ChevronRight } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import StatBlock from '@/components/ui/StatBlock';
-import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import SectionLabel from '@/components/ui/SectionLabel';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
@@ -81,12 +81,13 @@ export default function Dashboard() {
 
       {/* Role-specific admin banner */}
       {roleBanner && (
-        <div className={`mb-6 p-4 rounded-lg border ${roleBanner.color} flex items-start justify-between gap-3`}>
-          <div>
-            <span className={`text-xs font-bold uppercase tracking-widest ${roleBanner.text}`}>{roleBanner.label} Notice</span>
-            <p className="text-sm text-foreground mt-1">{roleBanner.message}</p>
+        <div className={`mb-6 p-4 rounded-xl border ${roleBanner.color} flex flex-col sm:flex-row sm:items-center justify-between gap-3`}>
+          <div className="min-w-0">
+            <span className={`text-[10px] font-bold uppercase tracking-widest ${roleBanner.text}`}>{roleBanner.label} Notice</span>
+            <p className="text-sm text-foreground mt-1 leading-snug">{roleBanner.message}</p>
           </div>
-          <Link to={roleBanner.link} className={`text-xs ${roleBanner.text} hover:underline whitespace-nowrap flex-shrink-0 mt-1`}>
+          <Link to={roleBanner.link}
+            className={`text-xs font-semibold ${roleBanner.text} border border-current/30 px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors whitespace-nowrap flex-shrink-0`}>
             {roleBanner.linkLabel}
           </Link>
         </div>
@@ -94,11 +95,9 @@ export default function Dashboard() {
 
       {/* Today's Ride Summary */}
       <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-4 bg-blue-500 rounded-full" />
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Today's Ride Summary</h2>
-          <span className="text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">● Live</span>
-        </div>
+        <SectionLabel accent="blue" label="Today's Ride Summary"
+          right={<span className="text-[10px] font-semibold text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block" /> Live</span>}
+        />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatBlock label="Distance"  value="24.3" unit="km"    accent="blue"   trend="up" trendValue="+8% vs yesterday" />
           <StatBlock label="Duration"  value="1:12" unit="hr"    accent="cyan" />
@@ -109,12 +108,8 @@ export default function Dashboard() {
 
       {/* Ride History Graph */}
       <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-4 bg-cyan-500 rounded-full" />
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Ride History</h2>
-          <span className="ml-auto text-xs text-muted-foreground">Last 7 days</span>
-        </div>
-        <div className="glass-card rounded-lg border border-white/5 p-4">
+        <SectionLabel accent="cyan" label="Ride History" right={<span className="text-xs text-muted-foreground">Last 7 days</span>} />
+        <div className="glass-card rounded-xl border border-white/5 p-5">
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={rideData}>
               <defs>
@@ -135,23 +130,20 @@ export default function Dashboard() {
 
       {/* Quick Actions */}
       <section className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-4 bg-violet-500 rounded-full" />
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Quick Actions</h2>
-        </div>
+        <SectionLabel accent="violet" label="Quick Actions" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {QUICK_ACTIONS.map(({ icon: Icon, label, desc, color, bg, path }) => (
             <Link
               key={label}
               to={path}
-              className={`flex items-center gap-4 p-4 rounded-lg border text-left transition-all duration-200 ${bg}`}
+              className={`flex items-center gap-4 p-4 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] ${bg}`}
             >
-              <div className={`p-2.5 rounded-lg bg-white/5 ${color} flex-shrink-0`}>
+              <div className={`p-2.5 rounded-xl bg-white/5 ${color} flex-shrink-0`}>
                 <Icon className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-foreground">{label}</p>
-                <p className="text-xs text-muted-foreground">{desc}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
             </Link>
@@ -161,30 +153,26 @@ export default function Dashboard() {
 
       {/* Recent Rides */}
       <section>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-1 h-4 bg-amber-500 rounded-full" />
-          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Recent Rides</h2>
-          <Link to="/routes" className="ml-auto text-xs text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>
-        </div>
-        <div className="glass-card rounded-lg border border-white/5 overflow-hidden">
-          <table className="w-full text-sm">
+        <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
+        <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
+          <table className="cf-table">
             <thead>
-              <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                <th className="text-left px-4 py-3">Ride</th>
-                <th className="text-left px-4 py-3 hidden sm:table-cell">Date</th>
-                <th className="text-right px-4 py-3">Distance</th>
-                <th className="text-right px-4 py-3 hidden md:table-cell">Duration</th>
-                <th className="text-right px-4 py-3 hidden md:table-cell">Avg Power</th>
+              <tr>
+                <th className="text-left">Ride</th>
+                <th className="text-left hidden sm:table-cell">Date</th>
+                <th className="text-right">Distance</th>
+                <th className="text-right hidden md:table-cell">Duration</th>
+                <th className="text-right hidden md:table-cell">Avg Power</th>
               </tr>
             </thead>
             <tbody>
               {RECENT_RIDES.map((ride, i) => (
-                <tr key={i} className="border-b border-border/50 hover:bg-white/3 transition-colors cursor-pointer">
-                  <td className="px-4 py-3 font-medium text-foreground">{ride.name}</td>
-                  <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{ride.date}</td>
-                  <td className="px-4 py-3 text-right text-blue-400 font-mono">{ride.km}</td>
-                  <td className="px-4 py-3 text-right text-muted-foreground hidden md:table-cell">{ride.time}</td>
-                  <td className="px-4 py-3 text-right text-cyan-400 font-mono hidden md:table-cell">{ride.watts}</td>
+                <tr key={i} className="cursor-pointer">
+                  <td className="font-medium text-foreground">{ride.name}</td>
+                  <td className="text-muted-foreground hidden sm:table-cell">{ride.date}</td>
+                  <td className="text-right text-blue-400 font-mono font-semibold">{ride.km}</td>
+                  <td className="text-right text-muted-foreground hidden md:table-cell">{ride.time}</td>
+                  <td className="text-right text-cyan-400 font-mono hidden md:table-cell">{ride.watts}</td>
                 </tr>
               ))}
             </tbody>

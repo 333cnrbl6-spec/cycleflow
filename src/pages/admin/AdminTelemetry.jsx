@@ -169,16 +169,16 @@ export default function AdminTelemetry() {
           </PlaceholderCard>
 
           <div className="glass-card rounded-xl border border-white/5 overflow-hidden">
-            <div className="p-4 border-b border-border">
+            <div className="px-4 py-3 border-b border-border">
               <span className="text-sm font-semibold text-foreground">Club Telemetry Summary</span>
             </div>
-            <table className="w-full text-sm">
+            <table className="cf-table">
               <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
-                  <th className="text-left px-4 py-3">Club</th>
-                  <th className="text-right px-4 py-3">Avg Ride</th>
-                  <th className="text-right px-4 py-3 hidden sm:table-cell">Avg Power</th>
-                  <th className="text-right px-4 py-3">Compliance</th>
+                <tr>
+                  <th className="text-left">Club</th>
+                  <th className="text-right">Avg Ride</th>
+                  <th className="text-right hidden sm:table-cell">Avg Power</th>
+                  <th className="text-right">Compliance</th>
                 </tr>
               </thead>
               <tbody>

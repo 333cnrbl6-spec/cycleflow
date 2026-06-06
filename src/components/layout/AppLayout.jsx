@@ -45,16 +45,25 @@ export default function AppLayout({ user }) {
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile top bar */}
-        <div className="md:hidden flex items-center gap-3 h-14 px-4 border-b border-border bg-card flex-shrink-0">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-foreground">CycleFlow</span>
-            <span className="text-[10px] text-blue-400/60 uppercase tracking-widest">SynergyFlow</span>
+        <div className="md:hidden flex items-center justify-between h-14 px-4 border-b border-border bg-[hsl(var(--sidebar-bg))]/80 backdrop-blur-md flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-blue-500 flex items-center justify-center glow-blue">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+              <span className="text-sm font-bold text-foreground tracking-tight">CycleFlow</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-7 h-7 rounded-full bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+              <span className="text-[10px] font-bold text-blue-400">{user?.full_name?.[0] || 'U'}</span>
+            </div>
           </div>
         </div>
 
@@ -64,7 +73,7 @@ export default function AppLayout({ user }) {
         </div>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto scrollbar-thin">
           <Outlet />
         </main>
       </div>

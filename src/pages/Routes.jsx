@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, TrendingUp, Navigation, Clock, Save, X } from 'lucide-react';
+import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, Navigation, Save, X } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const TABS = [
   { id: 'my',   label: 'My Routes',     icon: Star },
@@ -40,6 +40,9 @@ const elevData = [
 
 const ROUTE_TYPES = ['Road', 'Gravel', 'Mixed', 'Mountain', 'Commute'];
 const DIFFICULTY  = ['Easy', 'Moderate', 'Hard', 'Expert'];
+
+// Shared label utility used inside this file
+const CfLabel = ({ children }) => <label className="cf-label">{children}</label>;
 
 export default function Routes() {
   const [tab, setTab]               = useState('my');
@@ -222,8 +225,7 @@ export default function Routes() {
               ))}
             </div>
           </div>
-          <button onClick={() => setPlanStep(1)}
-            className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+          <button onClick={() => setPlanStep(1)} className="btn-primary w-full">
             Continue — Add Route Details →
           </button>
         </div>
@@ -240,7 +242,7 @@ export default function Routes() {
               <label className="text-xs text-muted-foreground block mb-1.5">Route Name *</label>
               <input value={formData.name} onChange={e => setFormData(p => ({...p, name: e.target.value}))}
                 placeholder="e.g. Morning Hill Climb"
-                className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-blue-500/50" />
+                className="cf-input" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -251,18 +253,18 @@ export default function Routes() {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1.5">Difficulty</label>
+                <label className="cf-label">Difficulty</label>
                 <select value={formData.difficulty} onChange={e => setFormData(p => ({...p, difficulty: e.target.value}))}
-                  className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground">
+                  className="cf-select">
                   {DIFFICULTY.map(d => <option key={d}>{d}</option>)}
                 </select>
               </div>
             </div>
             <div>
-              <label className="text-xs text-muted-foreground block mb-1.5">Description (optional)</label>
+              <label className="cf-label">Description (optional)</label>
               <textarea value={formData.desc} onChange={e => setFormData(p => ({...p, desc: e.target.value}))}
                 rows={3} placeholder="Add notes about road conditions, hazards, or highlights…"
-                className="w-full bg-white/5 border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:border-blue-500/50" />
+                className="cf-textarea" />
             </div>
             <div className="flex items-center justify-between pt-1">
               <label className="text-xs text-muted-foreground flex items-center gap-2 cursor-pointer">
@@ -273,8 +275,7 @@ export default function Routes() {
               </label>
             </div>
           </div>
-          <button onClick={() => setPlanStep(2)}
-            className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
+          <button onClick={() => setPlanStep(2)} className="btn-primary w-full">
             <Save className="w-4 h-4" /> Save Route
           </button>
         </div>
@@ -301,7 +302,7 @@ export default function Routes() {
             <FileUp className="w-10 h-10 text-blue-400/50 mx-auto mb-3" />
             <p className="text-sm font-semibold text-foreground mb-1">Upload GPX File</p>
             <p className="text-xs text-muted-foreground mb-4">Drag and drop or click to select a .gpx file</p>
-            <button className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition-colors">Browse Files</button>
+            <button className="btn-primary">Browse Files</button>
           </div>
           <div className="space-y-2">
             {GPX_FILES.map((f, i) => (
