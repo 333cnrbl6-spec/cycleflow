@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Activity, Gauge, Zap, Heart, Wifi, WifiOff } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
+import SubNav from '@/components/ui/SubNav';
 import SectionLabel from '@/components/ui/SectionLabel';
+import AdvancedOverlays from '@/components/telemetry/AdvancedOverlays';
 import {
   LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
@@ -70,9 +72,16 @@ const Sparkline = ({ data, color }) => (
   </ResponsiveContainer>
 );
 
+const TELEMETRY_TABS = [
+  { id: 'live',     label: 'Live Feed',          icon: Activity },
+  { id: 'overlays', label: 'Advanced Overlays',  icon: Gauge },
+];
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function Telemetry() {
+  const [tab, setTab] = useState('live');
+
   // Rolling series for each metric
   const [series, setSeries] = useState(() => ({
     speed:   initSeries(28, 6),
@@ -129,6 +138,14 @@ export default function Telemetry() {
           Live — {activeSensors} sensors active
         </span>
       </PageHeader>
+
+      <SubNav tabs={TELEMETRY_TABS} active={tab} onSelect={setTab} />
+
+      {/* ── Overlays tab ───────────────────────────────────────────────── */}
+      {tab === 'overlays' && <AdvancedOverlays />}
+
+      {/* ── Live Feed ─────────────────────────────────────────────────── */}
+      {tab === 'live' && <>
 
       {/* ── Section 1: Live Metric StatBlocks ──────────────────────────── */}
       <section className="mb-8">
@@ -284,6 +301,7 @@ export default function Telemetry() {
           })}
         </div>
       </section>
+      </>}
     </div>
   );
 }

@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Settings, User, SlidersHorizontal, Smartphone, Lock, Palette, ChevronRight, Sun, Moon, Globe } from 'lucide-react';
+import { Settings, User, SlidersHorizontal, Smartphone, Lock, Palette, ChevronRight, Sun, Moon, Globe, WifiOff, RefreshCw, Upload } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import { OfflineModeTab, DeviceSyncTab, RideImportExportTab } from '@/components/settings/OfflineDeviceSync';
 
 const TABS = [
-  { id: 'profile', label: 'Profile', icon: User },
-  { id: 'units', label: 'Units & Preferences', icon: SlidersHorizontal },
-  { id: 'devices', label: 'Device Management', icon: Smartphone },
-  { id: 'privacy', label: 'Data & Privacy', icon: Lock },
-  { id: 'theme', label: 'App Theme', icon: Palette },
+  { id: 'profile',  label: 'Profile',           icon: User },
+  { id: 'units',    label: 'Units',             icon: SlidersHorizontal },
+  { id: 'devices',  label: 'Device Sync',       icon: RefreshCw },
+  { id: 'offline',  label: 'Offline Mode',      icon: WifiOff },
+  { id: 'import',   label: 'Import / Export',   icon: Upload },
+  { id: 'privacy',  label: 'Data & Privacy',    icon: Lock },
+  { id: 'theme',    label: 'App Theme',         icon: Palette },
 ];
 
 const ROLE_LABELS = {
@@ -142,31 +145,9 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {tab === 'devices' && (
-        <div className="max-w-lg space-y-4">
-          <PlaceholderCard title="Connected Devices" description="Bluetooth and ANT+ devices paired to CycleFlow" icon={Smartphone} accent="blue">
-            <div className="mt-4 space-y-2">
-              {[
-                { name: 'Trek Domane Computer', type: 'Bluetooth', status: 'connected' },
-                { name: 'Garmin HRM-Pro', type: 'ANT+', status: 'disconnected' },
-                { name: 'Favero Assioma Power Meter', type: 'Bluetooth', status: 'connected' },
-              ].map((d, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{d.name}</p>
-                    <p className="text-xs text-muted-foreground">{d.type}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`w-2 h-2 rounded-full ${d.status === 'connected' ? 'bg-green-400' : 'bg-red-400'}`} />
-                    <span className="text-xs text-muted-foreground capitalize">{d.status}</span>
-                  </div>
-                </div>
-              ))}
-              <button className="text-xs text-blue-400 hover:text-blue-300 mt-1">+ Add New Device</button>
-            </div>
-          </PlaceholderCard>
-        </div>
-      )}
+      {tab === 'devices' && <DeviceSyncTab />}
+      {tab === 'offline' && <OfflineModeTab />}
+      {tab === 'import'  && <RideImportExportTab />}
 
       {tab === 'privacy' && (
         <div className="max-w-lg space-y-4">
