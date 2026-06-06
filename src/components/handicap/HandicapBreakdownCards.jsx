@@ -5,15 +5,16 @@ import HandicapAssistOverlay  from './HandicapAssistOverlay';
 
 /**
  * Orchestrates all breakdown sub-cards on the Breakdown tab.
- * Each card is a focused, standalone component.
+ * Accepts an optional `snapshot` from the simulation layer and
+ * passes relevant slices to each focused component.
  */
-export default function HandicapBreakdownCards() {
+export default function HandicapBreakdownCards({ snapshot }) {
   return (
     <div className="space-y-6">
-      <HandicapBaselineCard />
-      <HandicapBehaviourCard />
-      <HandicapRealtimeCard />
-      <HandicapAssistOverlay />
+      <HandicapBaselineCard  snapshot={snapshot} />
+      <HandicapBehaviourCard snapshot={snapshot} />
+      <HandicapRealtimeCard  data={snapshot} />
+      <HandicapAssistOverlay data={snapshot} />
     </div>
   );
 }

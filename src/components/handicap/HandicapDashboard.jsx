@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { Info, TrendingDown } from 'lucide-react';
+import { Info, TrendingDown, TrendingUp } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
 import StatBlock from '@/components/ui/StatBlock';
 import HandicapTrendChart from './HandicapTrendChart';
+import { hcpCategory } from '@/hooks/useHandicapSimulation';
 
-const FACTORS = [
+const STATIC_FACTORS = [
   { label: 'Physiological', score: 68, color: 'text-red-400',    bar: 'bg-red-400',    desc: 'Resting HR, BP, SpO₂, glucose' },
   { label: 'Behavioural',   score: 82, color: 'text-violet-400', bar: 'bg-violet-400', desc: 'Consistency, adherence, recovery' },
   { label: 'Real-Time',     score: 74, color: 'text-cyan-400',   bar: 'bg-cyan-400',   desc: 'Live HRV, power output, cadence' },
   { label: 'Environmental', score: 91, color: 'text-amber-400',  bar: 'bg-amber-400',  desc: 'Weather, altitude, road surface' },
 ];
 
-const CLUB_DIST = [
+const STATIC_CLUB = [
   { name: 'Alex T.',   hcp: 1.2, category: 'Elite' },
   { name: 'Sarah C.',  hcp: 2.4, category: 'A' },
   { name: 'You',       hcp: 2.7, category: 'A', highlight: true },
@@ -21,10 +22,39 @@ const CLUB_DIST = [
   { name: 'Lucy M.',   hcp: 6.4, category: 'C' },
 ];
 
-const CAT_COLOR = { Elite: 'text-amber-400', A: 'text-blue-400', B: 'text-violet-400', C: 'text-muted-foreground' };
+const CAT_COLOR = { Elite: 'text-amber-400', A: 'text-blue-400', B: 'text-violet-400', C: 'text-muted-foreground', D: 'text-muted-foreground/60' };
 
-export default function HandicapDashboard() {
+export default function HandicapDashboard({ snapshot }) {
   const [infoOpen, setInfoOpen] = useState(false);
+
+  // Use simulated data when provided, otherwise fall back to statics
+  const hcp            = snapshot ? snapshot.hcp            : 2.7;
+  const weekChange     = snapshot ? snapshot.hcpWeekChange  : -0.2;
+  const category       = snapshot ? snapshot.hcpCategory    : 'A';
+  const trend          = snapshot ? snapshot.trend          : null;
+  const clubDist       = snapshot ? snapshot.clubDist       : STATIC_CLUB;
+  const physioScore    = snapshot ? snapshot.physioScore    : 68;
+  const behScore       = snapshot ? snapshot.behScore       : 82;
+  const rtScore        = snapshot ? snapshot.rtScore        : 74;
+  const envScore       = snapshot ? snapshot.envScore       : 91;
+  const hrv            = snapshot ? snapshot.hrv            : 64;
+  const restingHR      = snapshot ? snapshot.restingHR      : 58;
+  const power          = snapshot ? snapshot.power          : null;
+  const consistency    = snapshot ? snapshot.consistency    : 91;
+
+  const baseline  = snapshot ? +(hcp + Math.abs(weekChange) * 8).toFixed(1) : 4.8;
+  const target    = snapshot ? +(hcp * 0.55).toFixed(1) : 1.5;
+  const weekDelta = weekChange >= 0 ? `+${weekChange}` : String(weekChange);
+
+  const factors = [
+    { label: 'Physiological', score: physioScore, color: 'text-red-400',    bar: 'bg-red-400',    desc: 'Resting HR, BP, SpO₂, glucose' },
+    { label: 'Behavioural',   score: behScore,    color: 'text-violet-400', bar: 'bg-violet-400', desc: 'Consistency, adherence, recovery' },
+    { label: 'Real-Time',     score: rtScore,     color: 'text-cyan-400',   bar: 'bg-cyan-400',   desc: 'Live HRV, power output, cadence' },
+    { label: 'Environmental', score: envScore,    color: 'text-amber-400',  bar: 'bg-amber-400',  desc: 'Weather, altitude, road surface' },
+  ];
+
+  const rankInClub = clubDist.findIndex(r => r.highlight) + 1;
+  const clubSize   = clubDist.length;
 
   return (
     <div className="space-y-6">
@@ -40,21 +70,22 @@ export default function HandicapDashboard() {
               </button>
             </div>
             <div className="flex items-end gap-3">
-              <span className="text-6xl font-bold font-mono text-blue-400 leading-none">2.7</span>
+              <span className="text-6xl font-bold font-mono text-blue-400 leading-none">{hcp}</span>
               <div className="mb-1.5">
-                <div className="flex items-center gap-1 text-green-400 text-xs font-semibold">
-                  <TrendingDown className="w-3.5 h-3.5" /> −2.1 over 12 weeks
+                <div className={`flex items-center gap-1 text-xs font-semibold ${weekChange <= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {weekChange <= 0 ? <TrendingDown className="w-3.5 h-3.5" /> : <TrendingUp className="w-3.5 h-3.5" />}
+                  {weekDelta} this week
                 </div>
-                <p className="text-[10px] text-muted-foreground">Category A · Club rank #3 of 7</p>
+                <p className="text-[10px] text-muted-foreground">Category {category} · Club rank #{rankInClub} of {clubSize}</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: 'Baseline',    value: '4.8',  color: 'text-muted-foreground' },
-              { label: 'Target',      value: '1.5',  color: 'text-green-400' },
-              { label: 'Week Change', value: '−0.2', color: 'text-green-400' },
-              { label: 'Category',   value: 'A',    color: 'text-blue-400' },
+              { label: 'Baseline',    value: String(baseline),  color: 'text-muted-foreground' },
+              { label: 'Target',      value: String(target),    color: 'text-green-400' },
+              { label: 'Week Change', value: weekDelta,         color: weekChange <= 0 ? 'text-green-400' : 'text-red-400' },
+              { label: 'Category',   value: category,          color: 'text-blue-400' },
             ].map(({ label, value, color }) => (
               <div key={label} className="text-center p-3 rounded-xl bg-white/[0.04] border border-white/[0.06]">
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
@@ -75,20 +106,20 @@ export default function HandicapDashboard() {
 
       {/* ── Quick stats ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatBlock label="HRV Score"        value="64"  unit="ms"   accent="violet" trend="up"   trendValue="+4 this week" />
-        <StatBlock label="Resting HR"       value="58"  unit="bpm"  accent="red"    trend="down" trendValue="−2 bpm" />
-        <StatBlock label="FTP / kg"         value="3.8" unit="W/kg" accent="blue" />
-        <StatBlock label="Ride Consistency" value="91"  unit="%"    accent="green" />
+        <StatBlock label="HRV Score"        value={String(hrv)}         unit="ms"   accent="violet" />
+        <StatBlock label="Resting HR"       value={String(restingHR)}   unit="bpm"  accent="red" />
+        <StatBlock label="Power"            value={power ? String(power) : '—'} unit="W" accent="blue" />
+        <StatBlock label="Ride Consistency" value={String(consistency)} unit="%"    accent="green" />
       </div>
 
-      {/* ── Trend chart (focused component) ── */}
+      {/* ── Trend chart ── */}
       <SectionLabel accent="blue" label="12-Week Handicap Trend" />
-      <HandicapTrendChart />
+      <HandicapTrendChart data={trend} />
 
       {/* ── Contributing factors ── */}
       <SectionLabel accent="violet" label="Contributing Factors" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {FACTORS.map(f => (
+        {factors.map(f => (
           <div key={f.label} className="glass-card rounded-xl border border-white/[0.06] p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-semibold text-foreground">{f.label}</p>
@@ -105,9 +136,9 @@ export default function HandicapDashboard() {
       {/* ── Club leaderboard ── */}
       <SectionLabel accent="cyan" label="Club Leaderboard" />
       <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
-        {CLUB_DIST.map((r, i) => (
+        {clubDist.map((r, i) => (
           <div
-            key={r.name}
+            key={r.name + i}
             className={`flex items-center gap-3 px-4 py-3 border-b border-border/20 last:border-0 ${
               r.highlight ? 'bg-blue-500/[0.06] border-l-2 border-l-blue-500' : 'hover:bg-white/[0.02]'
             }`}

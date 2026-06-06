@@ -5,7 +5,7 @@ import {
   Tooltip, ResponsiveContainer, ReferenceLine,
 } from 'recharts';
 
-const TREND_DATA = [
+const STATIC_TREND = [
   { w: 'W1',  hcp: 4.8 }, { w: 'W2',  hcp: 4.6 }, { w: 'W3',  hcp: 4.4 },
   { w: 'W4',  hcp: 4.1 }, { w: 'W5',  hcp: 3.9 }, { w: 'W6',  hcp: 4.2 },
   { w: 'W7',  hcp: 3.7 }, { w: 'W8',  hcp: 3.4 }, { w: 'W9',  hcp: 3.2 },
@@ -22,7 +22,9 @@ const Tip = ({ active, payload }) => {
   );
 };
 
-export default function HandicapTrendChart() {
+export default function HandicapTrendChart({ data }) {
+  const chartData = data || STATIC_TREND;
+
   return (
     <PlaceholderCard
       title="Handicap Progression"
@@ -32,7 +34,7 @@ export default function HandicapTrendChart() {
     >
       <div className="mt-4">
         <ResponsiveContainer width="100%" height={160}>
-          <AreaChart data={TREND_DATA}>
+          <AreaChart data={chartData}>
             <defs>
               <linearGradient id="hcpGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.25} />
@@ -41,7 +43,7 @@ export default function HandicapTrendChart() {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#1a2234" vertical={false} />
             <XAxis dataKey="w" tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 6]} tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} width={28} />
+            <YAxis domain={[0, 10]} tick={{ fill: '#475569', fontSize: 10 }} axisLine={false} tickLine={false} width={28} />
             <Tooltip content={<Tip />} />
             <ReferenceLine
               y={3.5}
