@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useDemo } from '@/lib/DemoContext';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { ShieldCheck, Building2, Layers, Activity, Settings, Server, Users, Zap, AlertTriangle, CheckCircle, Search, Plus, X, Edit2, BarChart2 } from 'lucide-react';
 import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
@@ -109,7 +111,7 @@ export default function SuperAdmin() {
 
       {/* ── Platform Control ── */}
       {tab === 'control' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Active Users (Live)"  value={ss ? ss.dailyActiveUsers.toLocaleString() : '5,380'} accent="blue"   trend="up" trendValue="+240 today" />
             <StatBlock label="Total Tenants"        value={ss ? String(ss.tenants) : '48'}    accent="cyan" />
@@ -158,7 +160,7 @@ export default function SuperAdmin() {
 
       {/* ── User Management ── */}
       {tab === 'users' && (
-        <div className="space-y-4">
+        <div className="space-y-4 tab-enter">
           {/* Toolbar */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -186,6 +188,9 @@ export default function SuperAdmin() {
 
           {/* Table */}
           <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            {filteredUsers.length === 0 ? (
+              <EmptyState icon={Users} title="No users match this filter" description="Try adjusting your search or role filter." accent="blue" />
+            ) : (
             <table className="cf-table">
               <thead>
                 <tr>
@@ -235,13 +240,14 @@ export default function SuperAdmin() {
                 ))}
               </tbody>
             </table>
+            )}
           </div>
         </div>
       )}
 
       {/* ── Tenants ── */}
       {tab === 'tenants' && (
-        <div className="space-y-4">
+        <div className="space-y-4 tab-enter">
           <div className="flex justify-end">
             <button className="btn-danger">
               <Plus className="w-4 h-4" /> Provision Tenant
@@ -287,7 +293,7 @@ export default function SuperAdmin() {
 
       {/* ── Integrations ── */}
       {tab === 'integrations' && (
-        <div className="space-y-4">
+        <div className="space-y-4 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Total"    value="8"  accent="blue" />
             <StatBlock label="Active"   value="6"  accent="green" />
@@ -311,7 +317,7 @@ export default function SuperAdmin() {
 
       {/* ── Analytics ── */}
       {tab === 'analytics' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <PlaceholderCard title="Daily Active Users — Last 6 Days" description="Platform-wide DAU" icon={Activity} accent="red">
             <div className="mt-4">
               <ResponsiveContainer width="100%" height={160}>
@@ -352,7 +358,7 @@ export default function SuperAdmin() {
 
       {/* ── Settings ── */}
       {tab === 'settings' && (
-        <div className="max-w-2xl space-y-4">
+        <div className="max-w-2xl space-y-4 tab-enter">
           <PlaceholderCard title="Global Platform Settings" description="System-wide config — affects all tenants" icon={Settings} accent="red">
             <div className="mt-4 space-y-3">
               {[

@@ -19,18 +19,18 @@ export default function PageHeader({
         {Icon && (
           <div className={cn(
             'flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center',
-            'bg-white/[0.06] border border-white/[0.08]',
+            'bg-white/[0.05] border border-white/[0.07] transition-colors duration-200',
             iconColor,
           )}>
-            <Icon className="w-[18px] h-[18px]" />
+            <Icon className="w-[17px] h-[17px]" strokeWidth={1.75} />
           </div>
         )}
         <div className="min-w-0">
-          <h1 className="text-lg font-bold text-foreground font-heading leading-tight tracking-tight truncate">
+          <h1 className="text-[17px] font-bold text-foreground font-heading leading-tight tracking-tight truncate">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-xs text-muted-foreground mt-0.5 leading-snug">
+            <p className="text-[11px] text-muted-foreground/75 mt-0.5 leading-snug">
               {subtitle}
             </p>
           )}

@@ -33,26 +33,26 @@ export default function StatBlock({
   return (
     <div className={cn(
       'glass-card rounded-xl border border-white/[0.06] p-4',
-      'hover:border-white/[0.12] transition-all duration-200',
+      'hover:border-white/[0.14] transition-all duration-200',
       glow && 'glow-blue',
     )}>
-      <p className="text-[10px] font-bold text-muted-foreground/70 uppercase tracking-widest mb-2 font-heading">
+      <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-2.5 font-heading leading-none">
         {label}
       </p>
 
       <div className="flex items-end gap-1.5">
-        <span className={cn('text-2xl font-bold font-mono leading-none', VALUE_COLOR[accent])}>
+        <span className={cn('text-[22px] font-bold font-mono leading-none transition-colors duration-300', VALUE_COLOR[accent])}>
           {value}
         </span>
         {unit && (
-          <span className="text-xs text-muted-foreground mb-0.5">{unit}</span>
+          <span className="text-[11px] text-muted-foreground/70 mb-0.5 leading-none">{unit}</span>
         )}
       </div>
 
       {trendValue && (
-        <div className={cn('flex items-center gap-1 mt-2 text-[10px] font-medium', trendColor)}>
+        <div className={cn('flex items-center gap-1 mt-2.5 text-[10px] font-medium', trendColor)}>
           <TrendIcon className="w-3 h-3 flex-shrink-0" />
-          {trendValue}
+          <span>{trendValue}</span>
         </div>
       )}
     </div>

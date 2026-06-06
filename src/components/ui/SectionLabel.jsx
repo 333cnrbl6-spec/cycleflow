@@ -17,8 +17,8 @@ const BAR = {
 export default function SectionLabel({ label, accent = 'blue', right, className }) {
   return (
     <div className={cn('flex items-center gap-2.5 mb-4', className)}>
-      <div className={cn('w-px h-4 rounded-full flex-shrink-0', BAR[accent])} />
-      <h2 className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/75 font-heading">
+      <div className={cn('w-0.5 h-3.5 rounded-full flex-shrink-0', BAR[accent])} />
+      <h2 className="text-[10.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground/65 font-heading leading-none">
         {label}
       </h2>
       {right && (

@@ -79,7 +79,7 @@ export default function AppLayout({ user }) {
         <DemoBanner />
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto scrollbar-thin overscroll-none">
+        <main className="flex-1 overflow-y-auto scrollbar-thin overscroll-none focus:outline-none" tabIndex={-1}>
           <div className="min-h-full">
             <Outlet />
           </div>

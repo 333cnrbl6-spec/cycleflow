@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Activity, Gauge, Zap, Heart, Wifi, WifiOff } from 'lucide-react';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import SectionLabel from '@/components/ui/SectionLabel';
@@ -142,10 +143,10 @@ export default function Telemetry() {
       <SubNav tabs={TELEMETRY_TABS} active={tab} onSelect={setTab} />
 
       {/* ── Overlays tab ───────────────────────────────────────────────── */}
-      {tab === 'overlays' && <AdvancedOverlays />}
+      {tab === 'overlays' && <div className="tab-enter"><AdvancedOverlays /></div>}
 
       {/* ── Live Feed ─────────────────────────────────────────────────── */}
-      {tab === 'live' && <>
+      {tab === 'live' && <div className="tab-enter">
 
       {/* ── Section 1: Live Metric StatBlocks ──────────────────────────── */}
       <section className="mb-8">
@@ -301,7 +302,7 @@ export default function Telemetry() {
           })}
         </div>
       </section>
-      </>}
+      </div>}
     </div>
   );
 }

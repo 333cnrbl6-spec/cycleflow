@@ -34,7 +34,7 @@ export default function PlaceholderCard({
   return (
     <div className={cn(
       'rounded-xl border p-5 glass-card',
-      'transition-all duration-200 hover:border-opacity-40',
+      'transition-all duration-200 hover:brightness-105',
       BORDER[accent],
       className,
     )}>

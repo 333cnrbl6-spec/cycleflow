@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useDemo } from '@/lib/DemoContext';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { Activity, Users, Building2, Globe, Globe2, TrendingUp, Zap, Heart, Gauge, BarChart2 } from 'lucide-react';
 import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
@@ -78,7 +80,7 @@ export default function AdminTelemetry() {
 
       {/* ── Club Level ── */}
       {tab === 'club' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Active Members"   value={cs ? String(cs.activeMembers) : '48'} accent="blue" />
             <StatBlock label="Compliance Score" value={cs ? `${cs.complianceScore}%` : '94%'} accent="green" />
@@ -123,38 +125,44 @@ export default function AdminTelemetry() {
           </div>
 
           {/* Top performers table */}
-          <PlaceholderCard title="Top Performers — This Month" description="Club member performance rankings" icon={Activity} accent="blue">
-            <div className="mt-3 overflow-x-auto -mx-1">
-              <table className="cf-table">
-                <thead>
-                  <tr>
-                    <th className="text-left">Rider</th>
-                    <th className="text-right">Distance</th>
-                    <th className="text-right hidden sm:table-cell">Avg Power</th>
-                    <th className="text-right hidden md:table-cell">Avg HR</th>
-                    <th className="text-right">Rides</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {TOP_PERFORMERS.map((p, i) => (
-                    <tr key={i}>
-                      <td className="font-medium text-foreground">{p.name}</td>
-                      <td className="text-right text-blue-400 font-mono font-semibold">{p.km} km</td>
-                      <td className="text-right text-violet-400 font-mono hidden sm:table-cell">{p.power}</td>
-                      <td className="text-right text-red-400 font-mono hidden md:table-cell">{p.hr}</td>
-                      <td className="text-right text-muted-foreground">{p.rides}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </PlaceholderCard>
+          <ErrorBoundary>
+            <PlaceholderCard title="Top Performers — This Month" description="Club member performance rankings" icon={Activity} accent="blue">
+              <div className="mt-3 overflow-x-auto -mx-1">
+                {TOP_PERFORMERS.length > 0 ? (
+                  <table className="cf-table">
+                    <thead>
+                      <tr>
+                        <th className="text-left">Rider</th>
+                        <th className="text-right">Distance</th>
+                        <th className="text-right hidden sm:table-cell">Avg Power</th>
+                        <th className="text-right hidden md:table-cell">Avg HR</th>
+                        <th className="text-right">Rides</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {TOP_PERFORMERS.map((p, i) => (
+                        <tr key={i}>
+                          <td className="font-medium text-foreground">{p.name}</td>
+                          <td className="text-right text-blue-400 font-mono font-semibold">{p.km} km</td>
+                          <td className="text-right text-violet-400 font-mono hidden sm:table-cell">{p.power}</td>
+                          <td className="text-right text-red-400 font-mono hidden md:table-cell">{p.hr}</td>
+                          <td className="text-right text-muted-foreground">{p.rides}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <EmptyState icon={Users} title="No rides recorded this month" description="Rider data will appear here once club members log rides." accent="blue" />
+                )}
+              </div>
+            </PlaceholderCard>
+          </ErrorBoundary>
         </div>
       )}
 
       {/* ── Regional ── */}
       {tab === 'regional' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Clubs in Region"  value={rs ? String(rs.clubs) : '12'} accent="violet" />
             <StatBlock label="Active Riders"    value={rs ? rs.activeRiders.toLocaleString() : '648'} accent="blue" />
@@ -208,7 +216,7 @@ export default function AdminTelemetry() {
 
       {/* ── Federation ── */}
       {tab === 'federation' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Affiliated Clubs"  value={fs ? String(fs.affiliatedClubs) : '138'} accent="amber" />
             <StatBlock label="Registered Riders" value={fs ? fs.registeredRiders.toLocaleString() : '12,400'} accent="blue" />
@@ -244,14 +252,14 @@ export default function AdminTelemetry() {
 
       {/* ── Handicap Tools ── */}
       {tab === 'handicap' && (
-        <div>
+        <div className="tab-enter">
           <AdminHandicapTools level="federation" />
         </div>
       )}
 
       {/* ── International ── */}
       {tab === 'global' && (
-        <div className="space-y-6">
+        <div className="space-y-6 tab-enter">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatBlock label="Total Riders"       value={gs ? gs.totalRiders.toLocaleString() : '180,000'} accent="orange" />
             <StatBlock label="Federations"        value={gs ? String(gs.federations) : '34'} accent="blue" />

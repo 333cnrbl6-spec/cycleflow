@@ -1,4 +1,6 @@
-import { LayoutDashboard, Play, Bluetooth, ShieldCheck, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Play, Bluetooth, ShieldCheck, ChevronRight, Bike } from 'lucide-react';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import PageHeader from '@/components/ui/PageHeader';
 import StatBlock from '@/components/ui/StatBlock';
 import SectionLabel from '@/components/ui/SectionLabel';
@@ -83,6 +85,8 @@ export default function Dashboard() {
   const hour = now.getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
 
+  const hasRides = recentRides.length > 0;
+
   return (
     <div className="p-6 page-enter">
       <PageHeader
@@ -166,30 +170,41 @@ export default function Dashboard() {
       {/* Recent Rides */}
       <section>
         <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
-        <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
-          <table className="cf-table">
-            <thead>
-              <tr>
-                <th className="text-left">Ride</th>
-                <th className="text-left hidden sm:table-cell">Date</th>
-                <th className="text-right">Distance</th>
-                <th className="text-right hidden md:table-cell">Duration</th>
-                <th className="text-right hidden md:table-cell">Avg Power</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentRides.map((ride, i) => (
-                <tr key={i} className="cursor-pointer">
-                  <td className="font-medium text-foreground">{ride.name}</td>
-                  <td className="text-muted-foreground hidden sm:table-cell">{ride.date}</td>
-                  <td className="text-right text-blue-400 font-mono font-semibold">{ride.km}</td>
-                  <td className="text-right text-muted-foreground hidden md:table-cell">{ride.time}</td>
-                  <td className="text-right text-cyan-400 font-mono hidden md:table-cell">{ride.watts}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ErrorBoundary>
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            {hasRides ? (
+              <table className="cf-table">
+                <thead>
+                  <tr>
+                    <th className="text-left">Ride</th>
+                    <th className="text-left hidden sm:table-cell">Date</th>
+                    <th className="text-right">Distance</th>
+                    <th className="text-right hidden md:table-cell">Duration</th>
+                    <th className="text-right hidden md:table-cell">Avg Power</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentRides.map((ride, i) => (
+                    <tr key={i} className="cursor-pointer">
+                      <td className="font-medium text-foreground">{ride.name}</td>
+                      <td className="text-muted-foreground hidden sm:table-cell">{ride.date}</td>
+                      <td className="text-right text-blue-400 font-mono font-semibold">{ride.km}</td>
+                      <td className="text-right text-muted-foreground hidden md:table-cell">{ride.time}</td>
+                      <td className="text-right text-cyan-400 font-mono hidden md:table-cell">{ride.watts}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <EmptyState
+                icon={Bike}
+                title="No rides yet"
+                description="Complete a ride to see your history here."
+                accent="blue"
+              />
+            )}
+          </div>
+        </ErrorBoundary>
       </section>
     </div>
   );
