@@ -1,0 +1,136 @@
+import { useState } from 'react';
+import { LayoutDashboard, Play, Bluetooth, ShieldCheck, Clock, Flame, Route, Zap, TrendingUp, Calendar, ChevronRight } from 'lucide-react';
+import PageHeader from '@/components/ui/PageHeader';
+import StatBlock from '@/components/ui/StatBlock';
+import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const rideData = [
+  { day: 'Mon', km: 24 }, { day: 'Tue', km: 0 }, { day: 'Wed', km: 38 },
+  { day: 'Thu', km: 15 }, { day: 'Fri', km: 42 }, { day: 'Sat', km: 67 }, { day: 'Sun', km: 29 },
+];
+
+const QUICK_ACTIONS = [
+  { icon: Play, label: 'Start Ride', desc: 'Begin a new ride session', color: 'text-blue-400', bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20' },
+  { icon: Bluetooth, label: 'Pair Bike', desc: 'Connect your bicycle sensors', color: 'text-cyan-400', bg: 'bg-cyan-500/10 hover:bg-cyan-500/20 border-cyan-500/20' },
+  { icon: ShieldCheck, label: 'Safety Check', desc: 'Run pre-ride inspection', color: 'text-green-400', bg: 'bg-green-500/10 hover:bg-green-500/20 border-green-500/20' },
+];
+
+const RECENT_RIDES = [
+  { name: 'Morning Loop', date: 'Today, 07:14', km: '24.3 km', time: '1h 12m', watts: '187W' },
+  { name: 'Evening Commute', date: 'Yesterday', km: '12.1 km', time: '38m', watts: '142W' },
+  { name: 'Weekend Club Ride', date: 'Sat 31 May', km: '67.5 km', time: '3h 04m', watts: '211W' },
+];
+
+export default function Dashboard() {
+  return (
+    <div className="p-6 page-enter">
+      <PageHeader
+        title="Dashboard"
+        subtitle="Welcome back — here's your ride overview"
+        icon={LayoutDashboard}
+      />
+
+      {/* Today's Ride Summary */}
+      <section className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 bg-blue-500 rounded-full" />
+          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Today's Ride Summary</h2>
+          <span className="text-xs text-muted-foreground bg-white/5 px-2 py-0.5 rounded-full">Live</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <StatBlock label="Distance" value="24.3" unit="km" accent="blue" trend="up" trendValue="+8% vs yesterday" />
+          <StatBlock label="Duration" value="1:12" unit="hr" accent="cyan" />
+          <StatBlock label="Avg Speed" value="20.3" unit="km/h" accent="blue" trend="up" trendValue="+1.2 km/h" />
+          <StatBlock label="Calories" value="612" unit="kcal" accent="amber" />
+        </div>
+      </section>
+
+      {/* Ride History Graph */}
+      <section className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 bg-cyan-500 rounded-full" />
+          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Ride History</h2>
+          <span className="ml-auto text-xs text-muted-foreground">Last 7 days</span>
+        </div>
+        <div className="glass-card rounded-lg border border-white/5 p-4">
+          <ResponsiveContainer width="100%" height={180}>
+            <AreaChart data={rideData}>
+              <defs>
+                <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+              <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} unit=" km" />
+              <Tooltip
+                contentStyle={{ background: '#0f1520', border: '1px solid #1e2a3e', borderRadius: 8, color: '#f8fafc' }}
+                cursor={{ stroke: '#3b82f6', strokeWidth: 1 }}
+              />
+              <Area type="monotone" dataKey="km" stroke="#3b82f6" strokeWidth={2} fill="url(#blueGrad)" dot={{ fill: '#3b82f6', r: 3 }} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
+
+      {/* Quick Actions */}
+      <section className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 bg-violet-500 rounded-full" />
+          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Quick Actions</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {QUICK_ACTIONS.map(({ icon: Icon, label, desc, color, bg }) => (
+            <button
+              key={label}
+              className={`flex items-center gap-4 p-4 rounded-lg border text-left transition-all duration-200 ${bg}`}
+            >
+              <div className={`p-2.5 rounded-lg bg-white/5 ${color}`}>
+                <Icon className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{label}</p>
+                <p className="text-xs text-muted-foreground">{desc}</p>
+              </div>
+              <ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" />
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Recent Rides */}
+      <section>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 bg-amber-500 rounded-full" />
+          <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">Recent Rides</h2>
+        </div>
+        <div className="glass-card rounded-lg border border-white/5 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border text-xs text-muted-foreground uppercase tracking-wide">
+                <th className="text-left px-4 py-3">Ride</th>
+                <th className="text-left px-4 py-3 hidden sm:table-cell">Date</th>
+                <th className="text-right px-4 py-3">Distance</th>
+                <th className="text-right px-4 py-3 hidden md:table-cell">Duration</th>
+                <th className="text-right px-4 py-3 hidden md:table-cell">Avg Power</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RECENT_RIDES.map((ride, i) => (
+                <tr key={i} className="border-b border-border/50 hover:bg-white/3 transition-colors cursor-pointer">
+                  <td className="px-4 py-3 font-medium text-foreground">{ride.name}</td>
+                  <td className="px-4 py-3 text-muted-foreground hidden sm:table-cell">{ride.date}</td>
+                  <td className="px-4 py-3 text-right text-blue-400 font-mono">{ride.km}</td>
+                  <td className="px-4 py-3 text-right text-muted-foreground hidden md:table-cell">{ride.time}</td>
+                  <td className="px-4 py-3 text-right text-cyan-400 font-mono hidden md:table-cell">{ride.watts}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}

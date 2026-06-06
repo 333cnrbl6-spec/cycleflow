@@ -1,0 +1,61 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "cyclist",
+        "club_admin",
+        "regional_coordinator",
+        "national_federation_admin",
+        "international_governing_body",
+        "super_admin"
+      ],
+      "default": "cyclist",
+      "description": "Multi-tier role for RBAC"
+    },
+    "club_id": {
+      "type": "string",
+      "description": "Associated club ID"
+    },
+    "region": {
+      "type": "string",
+      "description": "Geographic region"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country code"
+    },
+    "federation": {
+      "type": "string",
+      "description": "National federation name"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Profile avatar URL"
+    },
+    "units": {
+      "type": "string",
+      "enum": [
+        "metric",
+        "imperial"
+      ],
+      "default": "metric"
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "dark",
+        "light"
+      ],
+      "default": "dark"
+    },
+    "emergency_contact_name": {
+      "type": "string"
+    },
+    "emergency_contact_phone": {
+      "type": "string"
+    }
+  }
+}
