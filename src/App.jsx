@@ -17,6 +17,7 @@ import ClubHub from '@/pages/ClubHub';
 import SettingsPage from '@/pages/Settings';
 
 // Admin pages
+import AdminTelemetry from '@/pages/admin/AdminTelemetry';
 import ClubAdmin from '@/pages/admin/ClubAdmin';
 import RegionalCoordinator from '@/pages/admin/RegionalCoordinator';
 import FederationAdmin from '@/pages/admin/FederationAdmin';
@@ -60,6 +61,9 @@ const AuthenticatedApp = () => {
         <Route path="/telemetry"  element={<Telemetry />} />
         <Route path="/club-hub"   element={<ClubHub />} />
         <Route path="/settings"   element={<SettingsPage />} />
+
+        {/* Admin Telemetry */}
+        <Route path="/admin/telemetry" element={<AdminTelemetry />} />
 
         {/* Club Admin */}
         <Route path="/admin/club"          element={<ClubAdmin />} />

@@ -22,10 +22,11 @@ const ADMIN_SECTIONS = {
     label: 'Club Admin',
     color: 'text-cyan-400',
     items: [
-      { icon: Building2, label: 'Club Dashboard', path: '/admin/club' },
-      { icon: Users,     label: 'Manage Members', path: '/admin/club/members' },
-      { icon: Map,       label: 'Club Routes',    path: '/admin/club/routes' },
-      { icon: Shield,    label: 'Safety Reports', path: '/admin/club/safety' },
+      { icon: Building2, label: 'Club Dashboard',  path: '/admin/club' },
+      { icon: Users,     label: 'Manage Members',  path: '/admin/club/members' },
+      { icon: Map,       label: 'Club Routes',     path: '/admin/club/routes' },
+      { icon: Shield,    label: 'Safety Reports',  path: '/admin/club/safety' },
+      { icon: Activity,  label: 'Club Telemetry',  path: '/admin/telemetry' },
     ],
   },
   regional_coordinator: {
@@ -36,6 +37,7 @@ const ADMIN_SECTIONS = {
       { icon: Building2,  label: 'Manage Clubs',      path: '/admin/regional/clubs' },
       { icon: ShieldCheck,label: 'Compliance',         path: '/admin/regional/compliance' },
       { icon: Activity,   label: 'Aggregated Stats',   path: '/admin/regional/stats' },
+      { icon: Activity,   label: 'Regional Telemetry', path: '/admin/telemetry' },
     ],
   },
   national_federation_admin: {
