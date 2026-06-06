@@ -1,5 +1,6 @@
-import { Bell, Search, HelpCircle, ChevronRight } from 'lucide-react';
+import { Bell, Search, HelpCircle, ChevronRight, FlaskConical } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
+import { useDemo } from '@/lib/DemoContext';
 
 const ROUTE_LABELS = {
   '/':                           ['Dashboard',           null],
@@ -36,6 +37,7 @@ const ROUTE_LABELS = {
 export default function TopBar({ user }) {
   const location = useLocation();
   const [section, sub] = ROUTE_LABELS[location.pathname] || ['CycleFlow', null];
+  const { demoMode, toggleDemo } = useDemo();
 
   return (
     <header className="h-14 px-5 flex items-center justify-between gap-4
@@ -69,6 +71,20 @@ export default function TopBar({ user }) {
         </button>
         <button className="btn-icon hidden sm:inline-flex" title="Help">
           <HelpCircle className="w-4 h-4" />
+        </button>
+
+        {/* Demo Mode toggle */}
+        <button
+          onClick={toggleDemo}
+          title={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
+          className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-[11px] font-semibold border transition-all duration-150 ${
+            demoMode
+              ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 hover:bg-violet-500/30'
+              : 'bg-transparent border-border text-muted-foreground hover:text-foreground hover:border-white/25 hover:bg-white/5'
+          }`}
+        >
+          <FlaskConical className="w-3 h-3 flex-shrink-0" />
+          Demo
         </button>
 
         {/* User avatar + name */}

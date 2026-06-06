@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDemo } from '@/lib/DemoContext';
 import { ShieldCheck, Building2, Layers, Activity, Settings, Server, Users, Zap, AlertTriangle, CheckCircle, Search, Plus, X, Edit2, BarChart2 } from 'lucide-react';
 import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
@@ -74,6 +75,8 @@ const Tip = ({ active, payload, label }) => {
 
 export default function SuperAdmin() {
   const location = useLocation();
+  const { demoMode, data } = useDemo();
+  const ss = demoMode ? data.adminStats.super : null;
   const pathSegment = location.pathname.split('/').pop();
   const defaultTab = ['users','tenants','integrations','analytics','settings'].includes(pathSegment) ? pathSegment : 'control';
   const [tab, setTab] = useState(defaultTab);
@@ -108,10 +111,10 @@ export default function SuperAdmin() {
       {tab === 'control' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="Active Users (Live)"  value="5,380" accent="blue"   trend="up" trendValue="+240 today" />
-            <StatBlock label="Total Tenants"        value="48"    accent="cyan" />
-            <StatBlock label="API Requests (24h)"   value="1.2M"  accent="violet" />
-            <StatBlock label="System Uptime"        value="99.98%" accent="green" />
+            <StatBlock label="Active Users (Live)"  value={ss ? ss.dailyActiveUsers.toLocaleString() : '5,380'} accent="blue"   trend="up" trendValue="+240 today" />
+            <StatBlock label="Total Tenants"        value={ss ? String(ss.tenants) : '48'}    accent="cyan" />
+            <StatBlock label="API Latency (P95)"    value={ss ? `${ss.apiLatency}ms` : '210ms'} accent="violet" />
+            <StatBlock label="System Uptime"        value={ss ? `${ss.uptimePct}%` : '99.98%'} accent="green" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <PlaceholderCard title="System Health" description="Real-time infrastructure status" icon={Server} accent="blue">
@@ -329,10 +332,10 @@ export default function SuperAdmin() {
             </div>
           </PlaceholderCard>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="MAU"            value="18,400" accent="blue" />
-            <StatBlock label="Rides Logged"   value="94,200" accent="cyan" />
-            <StatBlock label="GPX Uploads"    value="12,100" accent="violet" />
-            <StatBlock label="SOS Triggers"   value="3"      accent="red" />
+            <StatBlock label="DAU"            value={ss ? ss.dailyActiveUsers.toLocaleString() : '5,380'} accent="blue" />
+            <StatBlock label="Storage Used"   value={ss ? `${ss.storageUsedTB} TB` : '4.2 TB'} accent="cyan" />
+            <StatBlock label="Webhooks / Min" value={ss ? String(ss.webhooksPerMin) : '820'} accent="violet" />
+            <StatBlock label="Error Rate"     value={ss ? `${ss.errorRate}%` : '0.12%'} accent="red" />
           </div>
         </div>
       )}

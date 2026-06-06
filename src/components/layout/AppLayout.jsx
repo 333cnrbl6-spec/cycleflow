@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { Menu } from 'lucide-react';
+import { DemoProvider } from '@/lib/DemoContext';
+import DemoBanner from '@/components/demo/DemoBanner';
 
 export default function AppLayout({ user }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -21,6 +23,7 @@ export default function AppLayout({ user }) {
   }, []);
 
   return (
+    <DemoProvider>
     <div className="flex h-screen bg-background overflow-hidden">
       {/* Mobile overlay */}
       {mobileOpen && (
@@ -72,6 +75,9 @@ export default function AppLayout({ user }) {
           <TopBar user={user} />
         </div>
 
+        {/* Demo banner */}
+        <DemoBanner />
+
         {/* Page content */}
         <main className="flex-1 overflow-y-auto scrollbar-thin overscroll-none">
           <div className="min-h-full">
@@ -80,5 +86,6 @@ export default function AppLayout({ user }) {
         </main>
       </div>
     </div>
+    </DemoProvider>
   );
 }

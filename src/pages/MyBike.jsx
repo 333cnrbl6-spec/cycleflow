@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Bike, Bluetooth, User, Wrench, Gauge, Battery, CheckCircle, AlertTriangle, XCircle, Search, Plus, Zap, TrendingDown } from 'lucide-react';
+import { useDemo } from '@/lib/DemoContext';
 import SectionLabel from '@/components/ui/SectionLabel';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
@@ -36,6 +37,9 @@ function StatusIcon({ status }) {
 }
 
 export default function MyBike() {
+  const { demoMode, data } = useDemo();
+  const sensors = demoMode ? data.sensors     : SENSORS;
+  const bm      = demoMode ? data.bikeMetrics : null;
   const [tab, setTab] = useState('pairing');
 
   return (
@@ -84,7 +88,7 @@ export default function MyBike() {
                 <Bluetooth className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Paired Devices</span>
               </div>
-              <span className="badge bg-cyan-500/10 text-cyan-400">{SENSORS.filter(s => s.status === 'connected').length} connected</span>
+              <span className="badge bg-cyan-500/10 text-cyan-400">{sensors.filter(s => s.status === 'connected').length} connected</span>
             </div>
             <table className="cf-table">
               <thead>
@@ -97,7 +101,7 @@ export default function MyBike() {
                 </tr>
               </thead>
               <tbody>
-                {SENSORS.map(s => (
+                {sensors.map(s => (
                   <tr key={s.id}>
                     <td className="font-medium text-foreground">{s.name}</td>
                     <td className="font-mono text-xs text-muted-foreground hidden sm:table-cell">{s.id}</td>
@@ -201,35 +205,33 @@ export default function MyBike() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PlaceholderCard title="Tyre Pressure" description="Current tyre pressure readings from smart valve sensors" icon={Gauge} accent="cyan">
             <div className="mt-4 grid grid-cols-2 gap-4">
-              <div className="text-center p-4 rounded-lg bg-white/5 border border-white/10">
-                <p className="text-xs text-muted-foreground mb-1">Front Tyre</p>
-                <p className="text-3xl font-bold text-cyan-400 font-mono">6.2</p>
-                <p className="text-xs text-muted-foreground">bar</p>
-                <div className="mt-2 w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-cyan-400 rounded-full" style={{ width: '78%' }} />
+              {[
+                { label: 'Front Tyre', data: bm ? bm.frontTyre : { psi: 6.2, status: 'Optimal', color: 'text-green-400', barColor: 'bg-cyan-400', pct: 78 } },
+                { label: 'Rear Tyre',  data: bm ? bm.rearTyre  : { psi: 5.8, status: 'Check Soon', color: 'text-amber-400', barColor: 'bg-amber-400', pct: 55 } },
+              ].map(({ label, data: td }) => (
+                <div key={label} className="text-center p-4 rounded-lg bg-white/5 border border-white/10">
+                  <p className="text-xs text-muted-foreground mb-1">{label}</p>
+                  <p className="text-3xl font-bold text-cyan-400 font-mono">{td.psi}</p>
+                  <p className="text-xs text-muted-foreground">bar</p>
+                  <div className="mt-2 w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div className={`h-full ${td.barColor} rounded-full`} style={{ width: `${td.pct}%` }} />
+                  </div>
+                  <p className={`text-xs mt-1 ${td.color}`}>{td.status}</p>
                 </div>
-                <p className="text-xs text-green-400 mt-1">Optimal</p>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-white/5 border border-white/10">
-                <p className="text-xs text-muted-foreground mb-1">Rear Tyre</p>
-                <p className="text-3xl font-bold text-cyan-400 font-mono">5.8</p>
-                <p className="text-xs text-muted-foreground">bar</p>
-                <div className="mt-2 w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-400 rounded-full" style={{ width: '55%' }} />
-                </div>
-                <p className="text-xs text-amber-400 mt-1">Check Soon</p>
-              </div>
+              ))}
             </div>
           </PlaceholderCard>
           <PlaceholderCard title="Auto-Sealant Status" description="Tubeless sealant level and condition monitoring" icon={Gauge} accent="blue">
             <div className="mt-4 space-y-3">
               <div className="flex justify-between items-center p-3 rounded-lg bg-white/5">
                 <span className="text-sm text-foreground">Front — Sealant Level</span>
-                <span className="text-sm font-medium text-green-400">Good — 85%</span>
+                <span className="text-sm font-medium text-green-400">{bm ? `Good — ${bm.sealantFront.level}` : 'Good — 85%'}</span>
               </div>
               <div className="flex justify-between items-center p-3 rounded-lg bg-white/5">
                 <span className="text-sm text-foreground">Rear — Sealant Level</span>
-                <span className="text-sm font-medium text-amber-400">Low — 30%</span>
+                <span className={`text-sm font-medium ${bm && bm.sealantRear.status === 'Low' ? 'text-amber-400' : 'text-green-400'}`}>
+                  {bm ? `${bm.sealantRear.status} — ${bm.sealantRear.level}` : 'Low — 30%'}
+                </span>
               </div>
               <div className="flex justify-between items-center p-3 rounded-lg bg-white/5">
                 <span className="text-sm text-foreground">Last Topped Up</span>
@@ -245,7 +247,7 @@ export default function MyBike() {
         <div className="space-y-4">
           <SectionLabel accent="amber" label="Sensor Battery Status" />
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            {SENSORS.map(s => (
+            {sensors.map(s => (
               <div key={s.id} className="glass-card rounded-xl border border-white/[0.06] p-4 text-center">
                 <div className="flex justify-center mb-2"><StatusIcon status={s.status} /></div>
                 <p className="text-xs font-semibold text-foreground mb-1">{s.name}</p>
@@ -295,15 +297,17 @@ export default function MyBike() {
                     <Zap className="w-4 h-4 text-violet-400" />
                     <p className="text-xs font-semibold text-foreground">E-Bike Drive System</p>
                   </div>
-                  <span className="badge bg-violet-500/10 text-violet-400">Not Connected</span>
+                  <span className={`badge ${bm ? 'bg-green-500/10 text-green-400' : 'bg-violet-500/10 text-violet-400'}`}>
+                    {bm ? 'Simulated' : 'Not Connected'}
+                  </span>
                 </div>
-                <p className="text-xs text-muted-foreground mb-3">Connect your Bosch Flow, Shimano Steps, or Brose motor system for live battery range prediction including assist mode, gradient, and rider weight variables.</p>
-                <div className="grid grid-cols-2 gap-2 text-center opacity-40">
+                <p className="text-xs text-muted-foreground mb-3">Connect your Bosch Flow, Shimano Steps, or Brose motor system for live battery range prediction.</p>
+                <div className={`grid grid-cols-2 gap-2 text-center ${bm ? '' : 'opacity-40'}`}>
                   {[
-                    ['Battery Charge', '—%'],
-                    ['Estimated Range', '— km'],
-                    ['Assist Mode', '—'],
-                    ['Range at ECO+', '— km'],
+                    ['Battery Charge', bm ? `${bm.eBattery.pct}%`        : '—%'],
+                    ['Estimated Range', bm ? `${bm.eBattery.range} km`   : '— km'],
+                    ['Assist Mode',    bm ? bm.eBattery.assistMode        : '—'],
+                    ['Motor Temp',     bm ? `${bm.motorTemp}°C`          : '—'],
                   ].map(([l, v]) => (
                     <div key={l} className="p-2 rounded-lg bg-white/5">
                       <p className="text-[10px] text-muted-foreground">{l}</p>
@@ -311,7 +315,7 @@ export default function MyBike() {
                     </div>
                   ))}
                 </div>
-                <button className="btn-secondary w-full mt-3 text-xs">Connect Bosch Flow / E-Drive</button>
+                {!bm && <button className="btn-secondary w-full mt-3 text-xs">Connect Bosch Flow / E-Drive</button>}
               </div>
 
               <div className="p-3 rounded-lg border border-dashed border-violet-500/20">

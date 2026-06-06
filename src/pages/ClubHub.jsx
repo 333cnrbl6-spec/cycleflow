@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Users, Bell, Calendar, Trophy, ChevronRight, Pin, Clock, Plus, X, MapPin, CheckCircle, CreditCard, ShieldCheck, FileText, UserPlus, Edit2, Download } from 'lucide-react';
+import { useDemo } from '@/lib/DemoContext';
 import SectionLabel from '@/components/ui/SectionLabel';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
@@ -62,6 +63,9 @@ const JUNE_EVENTS = { 8:'Ride', 10:'Training', 13:'Social', 14:'Ride', 22:'Race'
 const DAYS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
 export default function ClubHub() {
+  const { demoMode, data } = useDemo();
+  const leaderboard = demoMode ? data.clubLeaderboard : LEADERBOARD;
+  const memberCount = demoMode ? data.adminStats.club.activeMembers : MEMBERS.length;
   const [tab, setTab]               = useState('announcements');
   const [rsvpd, setRsvpd]           = useState(new Set([2]));
   const [selectedEvent, setSelected] = useState(null);
@@ -247,7 +251,7 @@ export default function ClubHub() {
               </tr>
             </thead>
             <tbody>
-              {LEADERBOARD.map((e, i) => (
+              {leaderboard.map((e, i) => (
                 <tr key={i} className={e.name.includes('You') ? '!bg-blue-500/5' : ''}>
                   <td>
                     {e.badge ? <span className="text-xl">{e.badge}</span> : <span className="text-sm text-muted-foreground font-mono">{e.rank}</span>}
@@ -271,8 +275,8 @@ export default function ClubHub() {
           {/* Stats row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: 'Total Members',  value: MEMBERS.length.toString(),                                        accent: 'blue'  },
-              { label: 'Active',         value: MEMBERS.filter(m => m.status === 'active').length.toString(),    accent: 'green' },
+              { label: 'Total Members',  value: memberCount.toString(),                                           accent: 'blue'  },
+              { label: 'Active',         value: demoMode ? data.adminStats.club.activeMembers.toString() : MEMBERS.filter(m => m.status === 'active').length.toString(), accent: 'green' },
               { label: 'Pending Renewal',value: '2',                                                              accent: 'amber' },
               { label: 'Lapsed',         value: MEMBERS.filter(m => m.status === 'inactive').length.toString(),  accent: 'red'   },
             ].map(s => (

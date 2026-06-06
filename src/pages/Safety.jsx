@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Shield, CheckSquare, AlertOctagon, Phone, Check, AlertTriangle, ClipboardList, FileText, Plus, Radio, MapPin, Users } from 'lucide-react';
+import { useDemo } from '@/lib/DemoContext';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
@@ -48,12 +49,12 @@ const POST_CHECKLIST = [
   { id: 7, item: 'Any damage or issues noted in log',       category: 'Maintenance' },
 ];
 
-const PAST_INCIDENTS = [
+const STATIC_INCIDENTS = [
   { type: 'Near-miss', date: '28 May 2026', severity: 'Medium', status: 'Submitted' },
   { type: 'Road hazard', date: '14 Apr 2026', severity: 'Low', status: 'Resolved' },
 ];
 
-const BEACON_CONTACTS = [
+const STATIC_BEACON = [
   { name: 'City Cycling Club', type: 'Club', status: 'Watching', avatar: 'CC' },
   { name: 'Jane Doe (Partner)', type: 'Personal', status: 'Watching', avatar: 'JD' },
 ];
@@ -112,6 +113,9 @@ function Checklist({ items, stateKey }) {
 }
 
 export default function Safety() {
+  const { demoMode, data } = useDemo();
+  const pastIncidents  = demoMode ? data.safetyIncidents : STATIC_INCIDENTS;
+  const beaconWatchers = demoMode ? data.beaconWatchers  : STATIC_BEACON;
   const [tab, setTab]           = useState('preride');
   const [sosActive, setSosActive] = useState(false);
   const [beaconOn, setBeaconOn] = useState(false);
@@ -186,7 +190,7 @@ export default function Safety() {
           {/* Watchers */}
           <PlaceholderCard title="Beacon Watchers" description="People and groups watching your live location" icon={Users} accent="green">
             <div className="mt-3 space-y-2">
-              {BEACON_CONTACTS.map((c, i) => (
+              {beaconWatchers.map((c, i) => (
                 <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
@@ -232,13 +236,13 @@ export default function Safety() {
       {/* ── Incident Report ── */}
       {tab === 'incident' && (
         <div className="space-y-4">
-          {PAST_INCIDENTS.length > 0 && (
+          {pastIncidents.length > 0 && (
             <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
               <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
                 <AlertOctagon className="w-3.5 h-3.5 text-amber-400" />
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Previous Reports</span>
               </div>
-              {PAST_INCIDENTS.map((inc, i) => (
+              {pastIncidents.map((inc, i) => (
                 <div key={i} className="px-4 py-3 border-b border-border/20 last:border-0 flex items-center justify-between hover:bg-white/[0.025] transition-colors">
                   <div>
                     <p className="text-sm font-medium text-foreground">{inc.type}</p>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Dumbbell, CalendarDays, Zap, ListChecks, ChevronRight, Lock } from 'lucide-react';
+import { useDemo } from '@/lib/DemoContext';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
@@ -76,8 +77,11 @@ const LOAD_COLOR = {
 };
 
 export default function Training() {
+  const { demoMode, data } = useDemo();
   const [tab, setTab]             = useState('plans');
   const [activePlan, setActivePlan] = useState(null);
+  const log   = demoMode ? data.trainingLog   : LOG;
+  const tload = demoMode ? data.trainingLoad  : { tss7: 412, ctl: 68, atl: 81, tsb: -13 };
 
   return (
     <div className="p-6 page-enter">
@@ -245,10 +249,10 @@ export default function Training() {
         <div className="space-y-4">
           <SectionLabel accent="cyan" label="Training Load" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="7-Day TSS"    value="412"  accent="violet" trend="up" trendValue="+18 vs prev week" />
-            <StatBlock label="CTL (Fitness)"value="68"   accent="blue" />
-            <StatBlock label="ATL (Fatigue)"value="81"   accent="amber" />
-            <StatBlock label="Form (TSB)"   value="-13"  accent="red" />
+            <StatBlock label="7-Day TSS"    value={String(tload.tss7)} accent="violet" trend="up" trendValue="+18 vs prev week" />
+            <StatBlock label="CTL (Fitness)"value={String(tload.ctl)}  accent="blue" />
+            <StatBlock label="ATL (Fatigue)"value={String(tload.atl)}  accent="amber" />
+            <StatBlock label="Form (TSB)"   value={String(tload.tsb)}  accent="red" />
           </div>
 
           <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
@@ -267,7 +271,7 @@ export default function Training() {
                 </tr>
               </thead>
               <tbody>
-                {LOG.map((r, i) => (
+                {log.map((r, i) => (
                   <tr key={i}>
                     <td className="text-muted-foreground font-mono text-xs">{r.date}</td>
                     <td className="font-medium text-foreground">{r.name}</td>

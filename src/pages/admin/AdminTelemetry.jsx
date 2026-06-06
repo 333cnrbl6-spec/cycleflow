@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDemo } from '@/lib/DemoContext';
 import { Activity, Users, Building2, Globe, Globe2, TrendingUp, Zap, Heart, Gauge, BarChart2 } from 'lucide-react';
 import AdminHandicapTools from '@/components/handicap/AdminHandicapTools';
 import PageHeader from '@/components/ui/PageHeader';
@@ -60,6 +61,11 @@ const Tip = ({ active, payload, label }) => {
 };
 
 export default function AdminTelemetry() {
+  const { demoMode, data } = useDemo();
+  const cs = demoMode ? data.adminStats.club     : null;
+  const rs = demoMode ? data.adminStats.regional : null;
+  const fs = demoMode ? data.adminStats.federation : null;
+  const gs = demoMode ? data.adminStats.international : null;
   const [tab, setTab] = useState('club');
 
   return (
@@ -74,10 +80,10 @@ export default function AdminTelemetry() {
       {tab === 'club' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="Club Avg Speed"   value="24.8" unit="km/h" accent="blue"   trend="up" trendValue="+0.8 this week" />
-            <StatBlock label="Club Avg Power"   value="204"  unit="W"    accent="violet" />
-            <StatBlock label="Avg HR (Club)"    value="151"  unit="bpm"  accent="red" />
-            <StatBlock label="Total Rides (Mo)" value="312"              accent="cyan" />
+            <StatBlock label="Active Members"   value={cs ? String(cs.activeMembers) : '48'} accent="blue" />
+            <StatBlock label="Compliance Score" value={cs ? `${cs.complianceScore}%` : '94%'} accent="green" />
+            <StatBlock label="Events This Month" value={cs ? String(cs.eventsThisMonth) : '6'} accent="violet" />
+            <StatBlock label="Avg HCP"          value={cs ? String(cs.avgHcp) : '3.4'} unit="hcp" accent="cyan" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,10 +156,10 @@ export default function AdminTelemetry() {
       {tab === 'regional' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="Region Total Rides"   value="1,170" accent="violet" trend="up" trendValue="+92 vs last week" />
-            <StatBlock label="Total Distance (Mo)"  value="58,400" unit="km" accent="blue" />
-            <StatBlock label="Avg Club Speed"       value="23.9" unit="km/h" accent="cyan" />
-            <StatBlock label="Active Cyclists"      value="142"  accent="green" />
+            <StatBlock label="Clubs in Region"  value={rs ? String(rs.clubs) : '12'} accent="violet" />
+            <StatBlock label="Active Riders"    value={rs ? rs.activeRiders.toLocaleString() : '648'} accent="blue" />
+            <StatBlock label="Compliance Rate"  value={rs ? `${rs.complianceRate}%` : '88%'} accent="green" />
+            <StatBlock label="Below Threshold"  value={rs ? String(rs.belowThreshold) : '2'} accent="red" />
           </div>
 
           <PlaceholderCard title="Regional Distance Comparison" description="Weekly total km per club" icon={TrendingUp} accent="violet">
@@ -204,10 +210,10 @@ export default function AdminTelemetry() {
       {tab === 'federation' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="National Rides (Mo)"   value="94,200"  accent="amber" trend="up" trendValue="+8% MoM" />
-            <StatBlock label="Total Cyclists"        value="4,620"   accent="blue" />
-            <StatBlock label="Avg National Speed"    value="24.1"  unit="km/h" accent="cyan" />
-            <StatBlock label="Incident Rate"         value="0.18" unit="/ride" accent="red" />
+            <StatBlock label="Affiliated Clubs"  value={fs ? String(fs.affiliatedClubs) : '138'} accent="amber" />
+            <StatBlock label="Registered Riders" value={fs ? fs.registeredRiders.toLocaleString() : '12,400'} accent="blue" />
+            <StatBlock label="Compliance %"      value={fs ? `${fs.complianceSubmitted}%` : '82%'} accent="cyan" />
+            <StatBlock label="Avg HCP"           value={fs ? String(fs.avgHcp) : '3.8'} accent="red" />
           </div>
 
           <PlaceholderCard title="National Distance Trend — 2026" description="Monthly total km across all federation members" icon={TrendingUp} accent="amber">
@@ -247,10 +253,10 @@ export default function AdminTelemetry() {
       {tab === 'global' && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatBlock label="Global Rides (Mo)"   value="2.4M"  accent="orange" trend="up" trendValue="+12% YoY" />
-            <StatBlock label="Countries Active"    value="62"    accent="blue" />
-            <StatBlock label="Avg Global Speed"    value="23.4" unit="km/h" accent="cyan" />
-            <StatBlock label="Federations"         value="48"    accent="amber" />
+            <StatBlock label="Total Riders"       value={gs ? gs.totalRiders.toLocaleString() : '180,000'} accent="orange" />
+            <StatBlock label="Federations"        value={gs ? String(gs.federations) : '34'} accent="blue" />
+            <StatBlock label="World Events"       value={gs ? String(gs.worldEvents) : '16'} accent="cyan" />
+            <StatBlock label="Gov. Alerts"        value={gs ? String(gs.governanceAlerts) : '2'} accent="amber" />
           </div>
 
           <PlaceholderCard title="Member Activity by Federation" description="Monthly active cyclists — top 6 federations" icon={Globe2} accent="orange">

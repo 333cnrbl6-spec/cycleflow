@@ -5,10 +5,17 @@ import SectionLabel from '@/components/ui/SectionLabel';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
+import { useDemo } from '@/lib/DemoContext';
 
-const rideData = [
+const STATIC_RIDE_DATA = [
   { day: 'Mon', km: 24 }, { day: 'Tue', km: 0 }, { day: 'Wed', km: 38 },
   { day: 'Thu', km: 15 }, { day: 'Fri', km: 42 }, { day: 'Sat', km: 67 }, { day: 'Sun', km: 29 },
+];
+
+const STATIC_RECENT_RIDES = [
+  { name: 'Morning Loop',       date: 'Today, 07:14',  km: '24.3 km', time: '1h 12m', watts: '187W' },
+  { name: 'Evening Commute',    date: 'Yesterday',      km: '12.1 km', time: '38m',    watts: '142W' },
+  { name: 'Weekend Club Ride',  date: 'Sat 31 May',    km: '67.5 km', time: '3h 04m', watts: '211W' },
 ];
 
 const QUICK_ACTIONS = [
@@ -63,9 +70,14 @@ const ROLE_BANNERS = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { demoMode, data } = useDemo();
   const role = user?.role || 'cyclist';
   const firstName = user?.full_name?.split(' ')[0] || 'Cyclist';
   const roleBanner = ROLE_BANNERS[role];
+
+  const rideData    = demoMode ? data.rideHistory     : STATIC_RIDE_DATA;
+  const recentRides = demoMode ? data.recentRides     : STATIC_RECENT_RIDES;
+  const summary     = demoMode ? data.todaySummary    : { distance: '24.3', duration: '1:12', avgSpeed: '20.3', calories: '612' };
 
   const now = new Date();
   const hour = now.getHours();
@@ -99,10 +111,10 @@ export default function Dashboard() {
           right={<span className="text-[10px] font-semibold text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block" /> Live</span>}
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatBlock label="Distance"  value="24.3" unit="km"    accent="blue"   trend="up" trendValue="+8% vs yesterday" />
-          <StatBlock label="Duration"  value="1:12" unit="hr"    accent="cyan" />
-          <StatBlock label="Avg Speed" value="20.3" unit="km/h"  accent="blue"   trend="up" trendValue="+1.2 km/h" />
-          <StatBlock label="Calories"  value="612"  unit="kcal"  accent="amber" />
+          <StatBlock label="Distance"  value={String(summary.distance)} unit="km"   accent="blue"  trend="up" trendValue="+8% vs yesterday" />
+          <StatBlock label="Duration"  value={String(summary.duration)} unit="hr"   accent="cyan" />
+          <StatBlock label="Avg Speed" value={String(summary.avgSpeed)} unit="km/h" accent="blue"  trend="up" trendValue="+1.2 km/h" />
+          <StatBlock label="Calories"  value={String(summary.calories)} unit="kcal" accent="amber" />
         </div>
       </section>
 
@@ -122,7 +134,7 @@ export default function Dashboard() {
               <XAxis dataKey="day" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} unit=" km" />
               <Tooltip contentStyle={{ background: '#0f1520', border: '1px solid #1e2a3e', borderRadius: 8, color: '#f8fafc' }} cursor={{ stroke: '#3b82f6', strokeWidth: 1 }} />
-              <Area type="monotone" dataKey="km" stroke="#3b82f6" strokeWidth={2} fill="url(#blueGrad)" dot={{ fill: '#3b82f6', r: 3 }} />
+              <Area type="monotone" dataKey="km" stroke="#3b82f6" strokeWidth={2} fill="url(#blueGrad)" dot={{ fill: '#3b82f6', r: 3 }} isAnimationActive={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -166,7 +178,7 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {RECENT_RIDES.map((ride, i) => (
+              {recentRides.map((ride, i) => (
                 <tr key={i} className="cursor-pointer">
                   <td className="font-medium text-foreground">{ride.name}</td>
                   <td className="text-muted-foreground hidden sm:table-cell">{ride.date}</td>
