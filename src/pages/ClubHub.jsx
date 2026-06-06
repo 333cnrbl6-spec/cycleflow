@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { Users, Bell, Calendar, Trophy, ChevronRight, Pin, Clock, Plus, X, MapPin, CheckCircle } from 'lucide-react';
+import { Users, Bell, Calendar, Trophy, ChevronRight, Pin, Clock, Plus, X, MapPin, CheckCircle, CreditCard, ShieldCheck, FileText, UserPlus, Edit2, Download } from 'lucide-react';
+import SectionLabel from '@/components/ui/SectionLabel';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
 
 const TABS = [
-  { id: 'announcements', label: 'Announcements', icon: Bell },
-  { id: 'events',        label: 'Club Events',   icon: Calendar },
-  { id: 'leaderboard',   label: 'Leaderboard',   icon: Trophy },
-  { id: 'members',       label: 'Members',       icon: Users },
+  { id: 'announcements', label: 'Announcements',   icon: Bell },
+  { id: 'events',        label: 'Club Events',     icon: Calendar },
+  { id: 'leaderboard',   label: 'Leaderboard',     icon: Trophy },
+  { id: 'members',       label: 'Membership',      icon: Users },
+  { id: 'compliance',    label: 'Insurance',        icon: ShieldCheck },
 ];
 
 const ANNOUNCEMENTS = [
@@ -263,22 +265,203 @@ export default function ClubHub() {
         </div>
       )}
 
-      {/* ── Members ── */}
+      {/* ── Membership Management ── */}
       {tab === 'members' && (
-        <div className="space-y-2">
-          {MEMBERS.map((m, i) => (
-            <div key={i} className="glass-card rounded-xl border border-white/5 p-4 flex items-center gap-3 hover:border-blue-500/20 transition-all">
-              <div className="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs font-bold text-blue-400">{m.name[0]}</span>
+        <div className="space-y-4">
+          {/* Stats row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { label: 'Total Members',  value: MEMBERS.length.toString(),                                        accent: 'blue'  },
+              { label: 'Active',         value: MEMBERS.filter(m => m.status === 'active').length.toString(),    accent: 'green' },
+              { label: 'Pending Renewal',value: '2',                                                              accent: 'amber' },
+              { label: 'Lapsed',         value: MEMBERS.filter(m => m.status === 'inactive').length.toString(),  accent: 'red'   },
+            ].map(s => (
+              <div key={s.label} className="glass-card rounded-xl border border-white/[0.06] p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-2">{s.label}</p>
+                <p className={`text-2xl font-bold font-mono ${
+                  s.accent === 'blue' ? 'text-blue-400' :
+                  s.accent === 'green' ? 'text-green-400' :
+                  s.accent === 'amber' ? 'text-amber-400' : 'text-red-400'
+                }`}>{s.value}</p>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{m.name}</p>
-                <p className="text-xs text-muted-foreground">Joined {m.joined}</p>
+            ))}
+          </div>
+
+          {/* Member directory */}
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="w-3.5 h-3.5 text-violet-400" />
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Member Directory</span>
               </div>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${m.role === 'Club Admin' ? 'bg-violet-500/10 text-violet-400' : 'bg-blue-500/10 text-blue-400'}`}>{m.role}</span>
-              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${m.status === 'active' ? 'bg-green-400' : 'bg-muted-foreground'}`} />
+              <button className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors">
+                <UserPlus className="w-3 h-3" /> Invite Member
+              </button>
             </div>
-          ))}
+            <table className="cf-table">
+              <thead>
+                <tr>
+                  <th className="text-left">Member</th>
+                  <th className="text-left hidden sm:table-cell">Role</th>
+                  <th className="text-left hidden md:table-cell">Joined</th>
+                  <th className="text-center hidden md:table-cell">Insurance</th>
+                  <th className="text-center">Status</th>
+                  <th className="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MEMBERS.map((m, i) => (
+                  <tr key={i}>
+                    <td>
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                          <span className="text-[10px] font-bold text-blue-400">{m.name[0]}</span>
+                        </div>
+                        <span className="font-medium text-foreground">{m.name}</span>
+                      </div>
+                    </td>
+                    <td className="hidden sm:table-cell">
+                      <span className={`badge ${m.role === 'Club Admin' ? 'bg-violet-500/10 text-violet-400' : 'bg-blue-500/10 text-blue-400'}`}>{m.role}</span>
+                    </td>
+                    <td className="text-muted-foreground hidden md:table-cell">{m.joined}</td>
+                    <td className="text-center hidden md:table-cell">
+                      <span className={`badge ${m.status === 'active' ? 'bg-green-500/10 text-green-400' : 'bg-amber-500/10 text-amber-400'}`}>
+                        {m.status === 'active' ? '✓ Covered' : 'Pending'}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <span className={`w-2 h-2 rounded-full inline-block ${m.status === 'active' ? 'bg-green-400' : 'bg-muted-foreground'}`} />
+                    </td>
+                    <td className="text-right">
+                      <button className="btn-icon"><Edit2 className="w-3.5 h-3.5" /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Membership tiers */}
+          <SectionLabel accent="violet" label="Membership Tiers" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { tier: 'Junior',    price: '£25/yr',  perks: ['Club rides', 'Newsletter', 'Basic insurance'], color: 'border-blue-500/20 bg-blue-500/[0.03]', badge: 'text-blue-400' },
+              { tier: 'Standard', price: '£65/yr',  perks: ['All Junior perks', 'Coaching sessions', 'Full BC insurance', 'Race licence'], color: 'border-violet-500/20 bg-violet-500/[0.03]', badge: 'text-violet-400' },
+              { tier: 'Premium',  price: '£110/yr', perks: ['All Standard perks', 'Training plans', 'Trackside support', 'Kit discount'], color: 'border-amber-500/20 bg-amber-500/[0.03]', badge: 'text-amber-400' },
+            ].map(t => (
+              <div key={t.tier} className={`rounded-xl border p-4 ${t.color}`}>
+                <p className={`text-sm font-bold ${t.badge}`}>{t.tier}</p>
+                <p className="text-lg font-bold text-foreground mt-1 font-mono">{t.price}</p>
+                <ul className="mt-3 space-y-1">
+                  {t.perks.map(p => (
+                    <li key={p} className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" /> {p}
+                    </li>
+                  ))}
+                </ul>
+                <button className="btn-secondary w-full mt-3 text-xs">Manage Tier</button>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-3 rounded-xl border border-dashed border-violet-500/20 bg-violet-500/[0.03] text-center">
+            <p className="text-xs text-muted-foreground">British Cycling affiliate membership sync, direct debit integration, and renewal automation hooks ready.</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Insurance & Compliance ── */}
+      {tab === 'compliance' && (
+        <div className="space-y-5">
+          <SectionLabel accent="green" label="Your Coverage" />
+
+          {/* Active policy summary */}
+          <div className="glass-card rounded-xl border border-green-500/20 bg-green-500/[0.04] p-5">
+            <div className="flex items-start justify-between gap-3 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center">
+                  <ShieldCheck className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">British Cycling — Standard Membership</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Policy No. BC-2026-448821 · Renews 31 Dec 2026</p>
+                </div>
+              </div>
+              <span className="badge bg-green-500/10 text-green-400 flex-shrink-0">Active</span>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                ['Public Liability',   '£15M'],
+                ['Personal Accident',  '£150K'],
+                ['Medical Cover',      '£10K'],
+                ['Legal Protection',   '£100K'],
+              ].map(([l, v]) => (
+                <div key={l} className="rounded-lg bg-white/5 p-3 text-center">
+                  <p className="text-[10px] text-muted-foreground">{l}</p>
+                  <p className="text-sm font-bold font-mono text-green-400 mt-0.5">{v}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button className="btn-secondary text-xs flex-1">
+                <Download className="w-3.5 h-3.5" /> Download Policy
+              </button>
+              <button className="btn-secondary text-xs flex-1">View Full Terms</button>
+            </div>
+          </div>
+
+          {/* Compliance checklist */}
+          <SectionLabel accent="blue" label="Compliance Requirements" />
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            {[
+              { item: 'British Cycling Membership',     status: 'Met',    date: 'Valid to Dec 2026', icon: '✓' },
+              { item: 'Public Liability Insurance',     status: 'Met',    date: 'BC Standard Policy', icon: '✓' },
+              { item: 'DBS Check (Ride Leaders)',       status: 'Met',    date: 'Verified May 2025', icon: '✓' },
+              { item: 'First Aid Certificate',          status: 'Action', date: 'Expires Aug 2026', icon: '⚠' },
+              { item: 'Club Affiliation — BC',          status: 'Met',    date: 'Affiliate No. 44821', icon: '✓' },
+              { item: 'GDPR Data Register',             status: 'Action', date: 'Annual review due', icon: '⚠' },
+              { item: 'Safeguarding Policy',            status: 'Met',    date: 'Updated Apr 2026', icon: '✓' },
+            ].map((c, i) => (
+              <div key={i} className="px-4 py-3 border-b border-border/20 last:border-0 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm ${c.status === 'Met' ? 'text-green-400' : 'text-amber-400'}`}>{c.icon}</span>
+                  <div>
+                    <p className="text-xs font-semibold text-foreground">{c.item}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{c.date}</p>
+                  </div>
+                </div>
+                <span className={`badge flex-shrink-0 ${c.status === 'Met' ? 'bg-green-500/10 text-green-400' : 'bg-amber-500/10 text-amber-400'}`}>{c.status}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Documents */}
+          <SectionLabel accent="amber" label="Club Documents" />
+          <div className="space-y-2">
+            {[
+              { name: 'Club Constitution 2026',            type: 'PDF',  size: '128 KB', date: 'Apr 2026' },
+              { name: 'Risk Assessment — Club Rides',      type: 'PDF',  size: '94 KB',  date: 'Mar 2026' },
+              { name: 'Safeguarding & Child Protection',   type: 'PDF',  size: '212 KB', date: 'Apr 2026' },
+              { name: 'GDPR Privacy Notice',               type: 'PDF',  size: '76 KB',  date: 'Jan 2026' },
+            ].map((doc, i) => (
+              <div key={i} className="glass-card rounded-xl border border-white/[0.06] p-4 flex items-center gap-3 hover:border-amber-500/20 transition-all">
+                <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{doc.name}</p>
+                  <p className="text-xs text-muted-foreground">{doc.type} · {doc.size} · Updated {doc.date}</p>
+                </div>
+                <button className="btn-icon flex-shrink-0">
+                  <Download className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-3 rounded-xl border border-dashed border-green-500/20 bg-green-500/[0.03] text-center">
+            <p className="text-xs text-muted-foreground">British Cycling affiliate portal sync and automated compliance reminders — integration hook ready.</p>
+          </div>
         </div>
       )}
 

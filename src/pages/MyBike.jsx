@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Bike, Bluetooth, User, Wrench, Gauge, Battery, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
+import { Bike, Bluetooth, User, Wrench, Gauge, Battery, CheckCircle, AlertTriangle, XCircle, Search, Plus, Zap, TrendingDown } from 'lucide-react';
+import SectionLabel from '@/components/ui/SectionLabel';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
@@ -14,11 +15,11 @@ const TABS = [
 ];
 
 const SENSORS = [
-  { name: 'Speed Sensor', status: 'connected', battery: 87, id: 'SPD-001' },
-  { name: 'Cadence Sensor', status: 'connected', battery: 62, id: 'CAD-002' },
-  { name: 'Power Meter', status: 'connected', battery: 91, id: 'PWR-003' },
-  { name: 'Heart Rate Monitor', status: 'disconnected', battery: 0, id: 'HRM-004' },
-  { name: 'GPS Module', status: 'connected', battery: 78, id: 'GPS-005' },
+  { name: 'Speed Sensor',       status: 'connected',    battery: 87, id: 'SPD-001', proto: 'ANT+' },
+  { name: 'Cadence Sensor',     status: 'connected',    battery: 62, id: 'CAD-002', proto: 'ANT+' },
+  { name: 'Power Meter',        status: 'connected',    battery: 91, id: 'PWR-003', proto: 'ANT+' },
+  { name: 'Heart Rate Monitor', status: 'disconnected', battery: 0,  id: 'HRM-004', proto: 'BLE'  },
+  { name: 'GPS Module',         status: 'connected',    battery: 78, id: 'GPS-005', proto: 'BLE'  },
 ];
 
 const MAINTENANCE = [
@@ -44,34 +45,86 @@ export default function MyBike() {
 
       {tab === 'pairing' && (
         <div className="space-y-4">
-          <PlaceholderCard title="Bluetooth Pairing" description="Connect your bike's sensors and computers via Bluetooth Low Energy (BLE)" icon={Bluetooth} accent="blue">
-            <div className="mt-4 flex flex-col items-center justify-center py-8 border border-dashed border-blue-500/30 rounded-lg">
-              <div className="w-16 h-16 rounded-full bg-blue-500/10 border-2 border-blue-500/30 flex items-center justify-center mb-4 animate-pulse">
-                <Bluetooth className="w-8 h-8 text-blue-400" />
+          {/* Scan panel */}
+          <PlaceholderCard title="Sensor Pairing" description="Discover and connect ANT+, BLE, and ANT-FE-C devices" icon={Bluetooth} accent="blue">
+            <div className="mt-4 space-y-4">
+              <div className="flex flex-col items-center justify-center py-6 border border-dashed border-blue-500/30 rounded-lg">
+                <div className="w-14 h-14 rounded-full bg-blue-500/10 border-2 border-blue-500/30 flex items-center justify-center mb-3 animate-pulse">
+                  <Bluetooth className="w-7 h-7 text-blue-400" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">Ready to Scan</p>
+                <p className="text-xs text-muted-foreground mb-4 text-center max-w-xs">
+                  Ensure sensors are powered on and in pairing mode. Supports ANT+, BLE, and Bluetooth Smart.
+                </p>
+                <button className="btn-primary glow-blue">
+                  <Search className="w-4 h-4" /> Start Scanning
+                </button>
               </div>
-              <p className="text-sm font-medium text-foreground mb-1">Ready to Scan</p>
-              <p className="text-xs text-muted-foreground mb-4">Make sure your sensors are powered on and in pairing mode</p>
-              <button className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors glow-blue">
-                Start Scanning
+
+              {/* Protocol support */}
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { proto: 'ANT+', desc: 'Speed, Cadence, Power, HR', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
+                  { proto: 'BLE',  desc: 'Garmin, Wahoo, Polar',       color: 'text-cyan-400',  bg: 'bg-cyan-500/10 border-cyan-500/20'  },
+                  { proto: 'ANT-FE-C', desc: 'Smart trainer control',  color: 'text-violet-400',bg: 'bg-violet-500/10 border-violet-500/20' },
+                ].map(p => (
+                  <div key={p.proto} className={`rounded-lg border p-3 text-center ${p.bg}`}>
+                    <p className={`text-xs font-bold ${p.color}`}>{p.proto}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{p.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </PlaceholderCard>
+
+          {/* Paired devices */}
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border/60 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Bluetooth className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Paired Devices</span>
+              </div>
+              <span className="badge bg-cyan-500/10 text-cyan-400">{SENSORS.filter(s => s.status === 'connected').length} connected</span>
+            </div>
+            <table className="cf-table">
+              <thead>
+                <tr>
+                  <th className="text-left">Device</th>
+                  <th className="text-left hidden sm:table-cell">ID</th>
+                  <th className="text-left hidden md:table-cell">Protocol</th>
+                  <th className="text-right">Battery</th>
+                  <th className="text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {SENSORS.map(s => (
+                  <tr key={s.id}>
+                    <td className="font-medium text-foreground">{s.name}</td>
+                    <td className="font-mono text-xs text-muted-foreground hidden sm:table-cell">{s.id}</td>
+                    <td className="hidden md:table-cell">
+                      <span className="badge bg-blue-500/10 text-blue-400">{s.proto || 'ANT+'}</span>
+                    </td>
+                    <td className="text-right">
+                      {s.status === 'connected'
+                        ? <span className={`font-mono text-xs font-semibold ${s.battery > 60 ? 'text-green-400' : s.battery > 30 ? 'text-amber-400' : 'text-red-400'}`}>{s.battery}%</span>
+                        : <span className="text-xs text-muted-foreground">—</span>
+                      }
+                    </td>
+                    <td className="text-right"><StatusIcon status={s.status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="px-4 py-3 border-t border-border/40">
+              <button className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                <Plus className="w-3 h-3" /> Add New Sensor
               </button>
             </div>
-          </PlaceholderCard>
-          <PlaceholderCard title="Paired Devices" description="3 of 5 sensors currently connected" icon={Bluetooth} accent="cyan">
-            <div className="mt-2 space-y-2">
-              {SENSORS.slice(0, 3).map(s => (
-                <div key={s.id} className="flex items-center justify-between py-2 border-b border-border/30 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{s.name}</p>
-                    <p className="text-xs text-muted-foreground">{s.id}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">{s.battery}%</span>
-                    <StatusIcon status={s.status} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PlaceholderCard>
+          </div>
+
+          <div className="p-3 rounded-xl border border-dashed border-blue-500/20 bg-blue-500/[0.03]">
+            <p className="text-xs text-muted-foreground text-center">Garmin Connect IQ, Wahoo API, and Bosch Flow sensor integration hooks ready for device-specific pairing flows.</p>
+          </div>
         </div>
       )}
 
@@ -190,20 +243,22 @@ export default function MyBike() {
 
       {tab === 'battery' && (
         <div className="space-y-4">
+          <SectionLabel accent="amber" label="Sensor Battery Status" />
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {SENSORS.map(s => (
-              <div key={s.id} className="glass-card rounded-lg border border-white/5 p-4 text-center">
-                <StatusIcon status={s.status} />
-                <p className="text-xs font-medium text-foreground mt-2 mb-1">{s.name}</p>
+              <div key={s.id} className="glass-card rounded-xl border border-white/[0.06] p-4 text-center">
+                <div className="flex justify-center mb-2"><StatusIcon status={s.status} /></div>
+                <p className="text-xs font-semibold text-foreground mb-1">{s.name}</p>
                 {s.status === 'connected' ? (
                   <>
-                    <p className="text-xl font-bold text-blue-400 font-mono">{s.battery}%</p>
+                    <p className={`text-xl font-bold font-mono ${s.battery > 60 ? 'text-green-400' : s.battery > 30 ? 'text-amber-400' : 'text-red-400'}`}>{s.battery}%</p>
                     <div className="mt-1.5 w-full h-1 bg-white/10 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full ${s.battery > 60 ? 'bg-green-400' : s.battery > 30 ? 'bg-amber-400' : 'bg-red-400'}`}
                         style={{ width: `${s.battery}%` }}
                       />
                     </div>
+                    <p className="text-[10px] text-muted-foreground mt-1">{s.proto}</p>
                   </>
                 ) : (
                   <p className="text-xs text-red-400 mt-1">Disconnected</p>
@@ -211,8 +266,60 @@ export default function MyBike() {
               </div>
             ))}
           </div>
-          <PlaceholderCard title="Sensor Health Overview" description="All sensors and their connection quality" icon={Battery} accent="blue">
-            <p className="text-xs text-muted-foreground mt-2">4 of 5 sensors active. Heart Rate Monitor not detected — ensure device is charged and within range.</p>
+
+          {/* Range Prediction placeholder */}
+          <SectionLabel accent="violet" label="Battery & Range Prediction" />
+          <PlaceholderCard title="Estimated Range" description="Predicted remaining range based on current battery levels and ride conditions" icon={TrendingDown} accent="violet">
+            <div className="mt-4 space-y-3">
+              {/* Main range display */}
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: 'GPS / Computer', range: '~94 km', pct: 78, color: 'text-green-400', bar: 'bg-green-400' },
+                  { label: 'Power Meter',    range: '~210 km', pct: 91, color: 'text-green-400', bar: 'bg-green-400' },
+                  { label: 'Speed Sensor',   range: '~180 km', pct: 87, color: 'text-green-400', bar: 'bg-green-400' },
+                ].map(r => (
+                  <div key={r.label} className="rounded-lg bg-white/5 border border-white/5 p-3 text-center">
+                    <p className="text-[10px] text-muted-foreground mb-2">{r.label}</p>
+                    <p className={`text-sm font-bold font-mono ${r.color}`}>{r.range}</p>
+                    <div className="mt-2 w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className={`h-full rounded-full ${r.bar}`} style={{ width: `${r.pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bosch e-bike stub */}
+              <div className="p-4 rounded-xl border border-violet-500/20 bg-violet-500/[0.05]">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-violet-400" />
+                    <p className="text-xs font-semibold text-foreground">E-Bike Drive System</p>
+                  </div>
+                  <span className="badge bg-violet-500/10 text-violet-400">Not Connected</span>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3">Connect your Bosch Flow, Shimano Steps, or Brose motor system for live battery range prediction including assist mode, gradient, and rider weight variables.</p>
+                <div className="grid grid-cols-2 gap-2 text-center opacity-40">
+                  {[
+                    ['Battery Charge', '—%'],
+                    ['Estimated Range', '— km'],
+                    ['Assist Mode', '—'],
+                    ['Range at ECO+', '— km'],
+                  ].map(([l, v]) => (
+                    <div key={l} className="p-2 rounded-lg bg-white/5">
+                      <p className="text-[10px] text-muted-foreground">{l}</p>
+                      <p className="text-sm font-mono font-bold text-foreground mt-0.5">{v}</p>
+                    </div>
+                  ))}
+                </div>
+                <button className="btn-secondary w-full mt-3 text-xs">Connect Bosch Flow / E-Drive</button>
+              </div>
+
+              <div className="p-3 rounded-lg border border-dashed border-violet-500/20">
+                <p className="text-xs text-muted-foreground text-center">
+                  Predictive range model using elevation profile, historical power data, and assist settings — Bosch Flow API and Shimano Steps BLE integration hook ready.
+                </p>
+              </div>
+            </div>
           </PlaceholderCard>
         </div>
       )}

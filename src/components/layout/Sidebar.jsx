@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
   LayoutDashboard, Bike, Map, Shield, Activity, Users, Settings,
   ChevronLeft, ChevronRight, Zap, Building2, Globe, Globe2,
-  ShieldCheck, Layers, ChevronDown
+  ShieldCheck, Layers, ChevronDown, Dumbbell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -13,6 +13,7 @@ const CYCLIST_NAV = [
   { icon: Map,             label: 'Routes',    path: '/routes' },
   { icon: Shield,          label: 'Safety',    path: '/safety' },
   { icon: Activity,        label: 'Telemetry', path: '/telemetry' },
+  { icon: Dumbbell,        label: 'Training',  path: '/training' },
   { icon: Users,           label: 'Club Hub',  path: '/club-hub' },
   { icon: Settings,        label: 'Settings',  path: '/settings' },
 ];

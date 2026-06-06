@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Shield, CheckSquare, Camera, AlertOctagon, Phone, Check, AlertTriangle, ClipboardList, FileText, Plus } from 'lucide-react';
+import { Shield, CheckSquare, AlertOctagon, Phone, Check, AlertTriangle, ClipboardList, FileText, Plus, Radio, MapPin, Users } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import SectionLabel from '@/components/ui/SectionLabel';
 
 const TABS = [
-  { id: 'preride',   label: 'Pre-Ride',        icon: CheckSquare },
-  { id: 'midride',   label: 'Mid-Ride',         icon: ClipboardList },
-  { id: 'postride',  label: 'Post-Ride',        icon: FileText },
-  { id: 'incident',  label: 'Incident Report',  icon: AlertOctagon },
-  { id: 'emergency', label: 'Emergency',         icon: Phone },
+  { id: 'preride',   label: 'Pre-Ride',       icon: CheckSquare },
+  { id: 'midride',   label: 'Mid-Ride',        icon: ClipboardList },
+  { id: 'postride',  label: 'Post-Ride',       icon: FileText },
+  { id: 'beacon',    label: 'Live Beacon',     icon: Radio },
+  { id: 'incident',  label: 'Incident Report', icon: AlertOctagon },
+  { id: 'emergency', label: 'Emergency',        icon: Phone },
 ];
 
 const PRE_CHECKLIST = [
@@ -26,29 +28,34 @@ const PRE_CHECKLIST = [
 ];
 
 const MID_CHECKLIST = [
-  { id: 1, item: 'Hydration — water bottle available',         category: 'Health' },
-  { id: 2, item: 'Energy level — no signs of bonking',         category: 'Health' },
-  { id: 3, item: 'Lights — still functioning',                 category: 'Lights' },
-  { id: 4, item: 'Tyre feel — no puncture symptoms',           category: 'Tyres' },
-  { id: 5, item: 'Chain — still running smoothly',             category: 'Drivetrain' },
-  { id: 6, item: 'Brakes — not fading or spongy',              category: 'Brakes' },
-  { id: 7, item: 'Phone — charged and accessible',             category: 'Safety' },
-  { id: 8, item: 'Weather — conditions acceptable to continue',category: 'Safety' },
+  { id: 1, item: 'Hydration — water bottle available',          category: 'Health' },
+  { id: 2, item: 'Energy level — no signs of bonking',          category: 'Health' },
+  { id: 3, item: 'Lights — still functioning',                  category: 'Lights' },
+  { id: 4, item: 'Tyre feel — no puncture symptoms',            category: 'Tyres' },
+  { id: 5, item: 'Chain — still running smoothly',              category: 'Drivetrain' },
+  { id: 6, item: 'Brakes — not fading or spongy',               category: 'Brakes' },
+  { id: 7, item: 'Phone — charged and accessible',              category: 'Safety' },
+  { id: 8, item: 'Weather — conditions acceptable to continue', category: 'Safety' },
 ];
 
 const POST_CHECKLIST = [
-  { id: 1, item: 'Bike wiped down and cleaned',               category: 'Maintenance' },
-  { id: 2, item: 'Chain re-lubricated if wet',                category: 'Maintenance' },
-  { id: 3, item: 'Brakes inspected for wear',                  category: 'Brakes' },
-  { id: 4, item: 'Tyre pressure checked and logged',           category: 'Tyres' },
-  { id: 5, item: 'Lights charged and stored',                  category: 'Lights' },
-  { id: 6, item: 'Ride data synced from bike computer',        category: 'Data' },
-  { id: 7, item: 'Any damage or issues noted in log',          category: 'Maintenance' },
+  { id: 1, item: 'Bike wiped down and cleaned',             category: 'Maintenance' },
+  { id: 2, item: 'Chain re-lubricated if wet',              category: 'Maintenance' },
+  { id: 3, item: 'Brakes inspected for wear',               category: 'Brakes' },
+  { id: 4, item: 'Tyre pressure checked and logged',        category: 'Tyres' },
+  { id: 5, item: 'Lights charged and stored',               category: 'Lights' },
+  { id: 6, item: 'Ride data synced from bike computer',     category: 'Data' },
+  { id: 7, item: 'Any damage or issues noted in log',       category: 'Maintenance' },
 ];
 
 const PAST_INCIDENTS = [
   { type: 'Near-miss', date: '28 May 2026', severity: 'Medium', status: 'Submitted' },
   { type: 'Road hazard', date: '14 Apr 2026', severity: 'Low', status: 'Resolved' },
+];
+
+const BEACON_CONTACTS = [
+  { name: 'City Cycling Club', type: 'Club', status: 'Watching', avatar: 'CC' },
+  { name: 'Jane Doe (Partner)', type: 'Personal', status: 'Watching', avatar: 'JD' },
 ];
 
 function Checklist({ items, stateKey }) {
@@ -60,7 +67,6 @@ function Checklist({ items, stateKey }) {
 
   return (
     <div className="space-y-3">
-      {/* Progress header */}
       <div className="glass-card rounded-xl border border-white/5 p-4 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-foreground">
@@ -78,8 +84,6 @@ function Checklist({ items, stateKey }) {
           <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-foreground">{pct}%</span>
         </div>
       </div>
-
-      {/* Items */}
       <div className="space-y-1.5">
         {items.map(item => (
           <button key={item.id} onClick={() => toggle(item.id)}
@@ -98,7 +102,6 @@ function Checklist({ items, stateKey }) {
           </button>
         ))}
       </div>
-
       {pct === 100 && (
         <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-center">
           <p className="text-sm font-semibold text-green-400">✓ All checks passed — you're good to go!</p>
@@ -109,22 +112,126 @@ function Checklist({ items, stateKey }) {
 }
 
 export default function Safety() {
-  const [tab, setTab] = useState('preride');
+  const [tab, setTab]           = useState('preride');
   const [sosActive, setSosActive] = useState(false);
-  const [incidentForm, setIncidentForm] = useState({ type: '', datetime: '', location: '', description: '', severity: 'Low', submitted: false });
+  const [beaconOn, setBeaconOn] = useState(false);
+  const [incidentForm, setIncidentForm] = useState({
+    type: '', datetime: '', location: '', description: '', severity: 'Low', submitted: false,
+  });
 
   return (
     <div className="p-6 page-enter">
-      <PageHeader title="Safety" subtitle="Checklists, incident reporting, and emergency tools" icon={Shield} iconColor="text-green-400" />
+      <PageHeader title="Safety" subtitle="Checklists, live beacon, incident reporting, and emergency tools" icon={Shield} iconColor="text-green-400" />
       <SubNav tabs={TABS} active={tab} onSelect={setTab} />
 
       {tab === 'preride'  && <Checklist items={PRE_CHECKLIST}  stateKey="pre" />}
       {tab === 'midride'  && <Checklist items={MID_CHECKLIST}  stateKey="mid" />}
       {tab === 'postride' && <Checklist items={POST_CHECKLIST} stateKey="post" />}
 
+      {/* ── Live Safety Beacon ── */}
+      {tab === 'beacon' && (
+        <div className="space-y-4">
+          {/* Beacon toggle */}
+          <div className={`rounded-2xl border-2 p-6 text-center transition-all duration-300 ${
+            beaconOn
+              ? 'border-green-500/60 bg-green-500/8 glow-cyan'
+              : 'border-green-500/20 bg-green-500/3 hover:border-green-500/40'
+          }`}>
+            <div className={`w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center border-2 transition-all duration-300 ${
+              beaconOn
+                ? 'bg-green-500/20 border-green-400 animate-pulse'
+                : 'bg-white/5 border-white/20'
+            }`}>
+              <Radio className={`w-8 h-8 transition-colors ${beaconOn ? 'text-green-400' : 'text-muted-foreground'}`} />
+            </div>
+            <h2 className="text-lg font-bold text-foreground mb-1">Live Safety Beacon</h2>
+            <p className="text-sm text-muted-foreground mb-5">
+              {beaconOn
+                ? '📡 Beacon active — your location is being shared with watchers in real time'
+                : 'Share your live GPS location with trusted contacts and club during a ride'}
+            </p>
+            <button
+              onClick={() => setBeaconOn(b => !b)}
+              className={`px-8 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 active:scale-[0.97] ${
+                beaconOn
+                  ? 'bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
+            >
+              {beaconOn ? 'Stop Beacon' : 'Start Beacon'}
+            </button>
+          </div>
+
+          {/* Map placeholder */}
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-green-400" />
+              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Live Position</span>
+              {beaconOn && <span className="ml-auto flex items-center gap-1.5 text-[10px] text-green-400"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />Broadcasting</span>}
+            </div>
+            <div className="h-52 bg-[#0a1628] flex items-center justify-center relative"
+              style={{ backgroundImage: 'linear-gradient(#1e40af15 1px, transparent 1px), linear-gradient(90deg, #1e40af15 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
+              {beaconOn && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-4 h-4 bg-green-400 rounded-full z-10 shadow-lg" style={{ boxShadow: '0 0 0 8px rgba(74,222,128,0.15), 0 0 0 20px rgba(74,222,128,0.07)' }} />
+                </div>
+              )}
+              <div className={`text-center z-20 ${beaconOn ? 'opacity-0' : 'opacity-100'}`}>
+                <MapPin className="w-8 h-8 text-blue-400/30 mx-auto mb-2" />
+                <p className="text-xs text-muted-foreground">Map view — React Leaflet integration ready</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Watchers */}
+          <PlaceholderCard title="Beacon Watchers" description="People and groups watching your live location" icon={Users} accent="green">
+            <div className="mt-3 space-y-2">
+              {BEACON_CONTACTS.map((c, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[10px] font-bold text-green-400">{c.avatar}</span>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">{c.name}</p>
+                      <p className="text-[10px] text-muted-foreground">{c.type}</p>
+                    </div>
+                  </div>
+                  <span className="badge bg-green-500/10 text-green-400">{c.status}</span>
+                </div>
+              ))}
+              <button className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 mt-1">
+                <Plus className="w-3 h-3" /> Add Watcher
+              </button>
+            </div>
+          </PlaceholderCard>
+
+          {/* Settings */}
+          <PlaceholderCard title="Beacon Settings" description="Configure sharing interval and auto-trigger rules" icon={Radio} accent="blue">
+            <div className="mt-3 space-y-2">
+              {[
+                { label: 'Update interval',         value: 'Every 30 seconds' },
+                { label: 'Auto-start on ride begin',value: 'Enabled' },
+                { label: 'Auto-stop on ride end',   value: 'Enabled' },
+                { label: 'Crash detection trigger', value: 'On — activates SOS after 60s no movement' },
+                { label: 'Share with club by default', value: 'City Cycling Club' },
+              ].map(([l, v]) => (
+                <div key={l} className="flex items-center justify-between p-2.5 rounded-lg bg-white/5">
+                  <span className="text-xs text-muted-foreground">{l}</span>
+                  <span className="text-xs font-medium text-foreground truncate ml-4 text-right">{v}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 p-3 rounded-lg border border-blue-500/20 bg-blue-500/[0.04]">
+              <p className="text-xs text-blue-400/80">Live beacon API — WebSocket GPS stream and Garmin LiveTrack / Wahoo ELEMNT integration hook ready.</p>
+            </div>
+          </PlaceholderCard>
+        </div>
+      )}
+
+      {/* ── Incident Report ── */}
       {tab === 'incident' && (
         <div className="space-y-4">
-          {/* Past incidents */}
           {PAST_INCIDENTS.length > 0 && (
             <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
               <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
@@ -145,8 +252,6 @@ export default function Safety() {
               ))}
             </div>
           )}
-
-          {/* New incident form */}
           {incidentForm.submitted ? (
             <div className="text-center py-10 page-enter">
               <div className="w-14 h-14 rounded-full bg-amber-500/10 border-2 border-amber-500/30 flex items-center justify-center mx-auto mb-3">
@@ -209,9 +314,9 @@ export default function Safety() {
         </div>
       )}
 
+      {/* ── Emergency ── */}
       {tab === 'emergency' && (
         <div className="space-y-4">
-          {/* SOS */}
           <div className={`rounded-2xl border-2 p-6 text-center transition-all duration-300 ${
             sosActive ? 'border-red-500 bg-red-500/10 glow-red' : 'border-red-500/40 bg-red-500/5 hover:border-red-500/60'
           }`}>
@@ -232,8 +337,6 @@ export default function Safety() {
               <span className="text-xs font-bold">{sosActive ? 'SENT' : 'HOLD SOS'}</span>
             </button>
           </div>
-
-          {/* Emergency contacts */}
           <PlaceholderCard title="Emergency Contacts" description="Notified automatically when SOS is triggered" icon={Phone} accent="red">
             <div className="mt-3 space-y-2">
               {[
@@ -258,8 +361,6 @@ export default function Safety() {
               </button>
             </div>
           </PlaceholderCard>
-
-          {/* Medical info */}
           <PlaceholderCard title="Medical Information" description="Shared with emergency services if SOS is triggered" icon={Shield} accent="blue">
             <div className="mt-3 space-y-2">
               {[['Blood Type','A+'],['Allergies','Penicillin'],['Medical Conditions','None'],['GP Contact','Dr. Smith — 01234 567890']].map(([l,v]) => (

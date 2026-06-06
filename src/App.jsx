@@ -15,6 +15,7 @@ import Safety from '@/pages/Safety';
 import Telemetry from '@/pages/Telemetry';
 import ClubHub from '@/pages/ClubHub';
 import SettingsPage from '@/pages/Settings';
+import Training from '@/pages/Training';
 
 // Admin pages
 import AdminTelemetry from '@/pages/admin/AdminTelemetry';
@@ -60,6 +61,7 @@ const AuthenticatedApp = () => {
         <Route path="/safety"     element={<Safety />} />
         <Route path="/telemetry"  element={<Telemetry />} />
         <Route path="/club-hub"   element={<ClubHub />} />
+        <Route path="/training"   element={<Training />} />
         <Route path="/settings"   element={<SettingsPage />} />
 
         {/* Admin Telemetry */}

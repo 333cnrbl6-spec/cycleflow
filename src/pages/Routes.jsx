@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, Navigation, Save, X } from 'lucide-react';
+import { Map, Star, Users, Plus, FileUp, Route, ChevronRight, Download, Navigation, Save, X, TrendingUp, Trophy, Lock } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import SectionLabel from '@/components/ui/SectionLabel';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const TABS = [
-  { id: 'my',   label: 'My Routes',     icon: Star },
-  { id: 'club', label: 'Club Routes',   icon: Users },
-  { id: 'plan', label: 'Plan Route',    icon: Plus },
-  { id: 'gpx',  label: 'GPX Files',    icon: FileUp },
+  { id: 'my',       label: 'My Routes',     icon: Star },
+  { id: 'club',     label: 'Club Routes',   icon: Users },
+  { id: 'segments', label: 'Segments',      icon: TrendingUp },
+  { id: 'plan',     label: 'Plan Route',    icon: Plus },
+  { id: 'gpx',      label: 'GPX Files',     icon: FileUp },
 ];
 
 const MY_ROUTES = [
@@ -142,6 +144,106 @@ export default function Routes() {
               <Download className="w-4 h-4" /> GPX
             </button>
           </div>
+        </div>
+      )}
+
+      {/* ── Segments ── */}
+      {tab === 'segments' && (
+        <div className="space-y-5">
+          <SectionLabel accent="amber" label="Segments Near You" />
+
+          {/* KOM / PR strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { label: 'Segments Matched',  value: '24',    accent: 'blue' },
+              { label: 'KOM / QOM Held',    value: '2',     accent: 'amber' },
+              { label: 'Personal Records',  value: '11',    accent: 'green' },
+              { label: 'Top-10 Positions',  value: '7',     accent: 'violet' },
+            ].map(s => (
+              <div key={s.label} className="glass-card rounded-xl border border-white/[0.06] p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70 mb-2">{s.label}</p>
+                <p className={`text-2xl font-bold font-mono ${
+                  s.accent === 'blue' ? 'text-blue-400' :
+                  s.accent === 'amber' ? 'text-amber-400' :
+                  s.accent === 'green' ? 'text-green-400' : 'text-violet-400'
+                }`}>{s.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Segment list */}
+          <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
+            <div className="px-4 py-3 border-b border-border/60 flex items-center gap-2">
+              <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground/70">Recent Segment Efforts</span>
+            </div>
+            <table className="cf-table">
+              <thead>
+                <tr>
+                  <th className="text-left">Segment</th>
+                  <th className="text-right hidden sm:table-cell">Distance</th>
+                  <th className="text-right">Your Time</th>
+                  <th className="text-right hidden md:table-cell">KOM</th>
+                  <th className="text-right">Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { name: 'Box Hill Climb',         dist: '2.4 km', time: '8:12', kom: '6:44', rank: 3,   pr: true  },
+                  { name: 'Leith Hill Sprint',       dist: '1.1 km', time: '2:54', kom: '2:31', rank: 8,   pr: false },
+                  { name: 'Newlands Corner Dash',   dist: '3.8 km', time: '6:31', kom: '5:50', rank: 2,   pr: true  },
+                  { name: 'Zig Zag Road',           dist: '1.9 km', time: '4:48', kom: '3:59', rank: 14,  pr: false },
+                  { name: 'Ranmore Road Segment',   dist: '4.2 km', time: '9:05', kom: '7:22', rank: 5,   pr: false },
+                ].map((s, i) => (
+                  <tr key={i} className={s.rank <= 3 ? '!bg-amber-500/[0.04]' : ''}>
+                    <td>
+                      <span className="font-medium text-foreground">{s.name}</span>
+                      {s.pr && <span className="ml-2 badge bg-green-500/10 text-green-400">PR</span>}
+                    </td>
+                    <td className="text-right text-muted-foreground hidden sm:table-cell">{s.dist}</td>
+                    <td className="text-right font-mono font-semibold text-blue-400">{s.time}</td>
+                    <td className="text-right font-mono text-muted-foreground hidden md:table-cell">{s.kom}</td>
+                    <td className="text-right">
+                      <span className={`badge font-mono ${
+                        s.rank === 1 ? 'bg-amber-500/10 text-amber-400' :
+                        s.rank <= 3  ? 'bg-yellow-500/10 text-yellow-400' :
+                        s.rank <= 10 ? 'bg-blue-500/10 text-blue-400' :
+                        'bg-white/10 text-muted-foreground'
+                      }`}>#{s.rank}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Club segment leaderboard */}
+          <PlaceholderCard title="Club Segment Leaderboard" description="How club members rank on local segments this month" icon={Trophy} accent="amber">
+            <div className="mt-3 space-y-2">
+              {[
+                { rider: 'Alex Turner',  segment: 'Box Hill Climb',      rank: 1, time: '7:02' },
+                { rider: 'Sarah Chen',   segment: 'Newlands Corner Dash',rank: 2, time: '6:38' },
+                { rider: 'You (Jamie)',  segment: 'Newlands Corner Dash',rank: 2, time: '6:31' },
+              ].map((e, i) => (
+                <div key={i} className={`flex items-center justify-between p-3 rounded-lg border transition-colors
+                  ${e.rider.includes('You') ? 'border-blue-500/20 bg-blue-500/5' : 'border-white/5 bg-white/5'}`}>
+                  <div className="flex items-center gap-2.5">
+                    <span className={`text-sm font-bold ${e.rank === 1 ? 'text-amber-400' : e.rank === 2 ? 'text-slate-300' : 'text-muted-foreground'}`}>
+                      {e.rank === 1 ? '🥇' : e.rank === 2 ? '🥈' : `#${e.rank}`}
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold text-foreground">{e.rider}</p>
+                      <p className="text-[10px] text-muted-foreground">{e.segment}</p>
+                    </div>
+                  </div>
+                  <span className="font-mono text-xs text-blue-400 font-semibold">{e.time}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 p-3 rounded-lg border border-dashed border-amber-500/20 text-center">
+              <p className="text-xs text-muted-foreground">Live leaderboard sync — Strava Segments API and Komoot Highlights integration hook ready.</p>
+            </div>
+          </PlaceholderCard>
         </div>
       )}
 
