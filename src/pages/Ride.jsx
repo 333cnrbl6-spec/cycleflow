@@ -9,7 +9,7 @@ const PHASES = { idle: 'idle', riding: 'riding', summary: 'summary' };
 
 function IdleScreen({ demoMode, onStart }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Pre-ride card */}
       <div className="glass-card rounded-2xl border border-white/[0.07] p-6 text-center space-y-4">
         <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto">
@@ -44,7 +44,7 @@ function IdleScreen({ demoMode, onStart }) {
       </div>
 
       {/* Feature list */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 gap-3 ${demoMode ? 'demo-fade' : ''}`}>
         {[
           { label: 'Live Telemetry',        desc: 'Speed, HR, power, cadence — colour-coded by effort zone', color: 'blue' },
           { label: 'Map Follow Mode',       desc: 'Rider dot tracks your simulated position along the route', color: 'cyan' },
@@ -77,7 +77,7 @@ export default function Ride() {
   const [phase, setPhase] = useState(PHASES.idle);
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter space-y-8 pb-8">
       <PageHeader
         title="Live Ride"
         subtitle={
@@ -87,19 +87,28 @@ export default function Ride() {
         }
         icon={Navigation}
         iconColor="text-blue-400"
-      />
+      >
+        {demoMode && (
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-full">
+            <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" aria-hidden="true" />
+            Demo
+          </span>
+        )}
+      </PageHeader>
 
-      {phase === PHASES.idle && (
-        <IdleScreen demoMode={demoMode} onStart={() => setPhase(PHASES.riding)} />
-      )}
+      <div>
+        {phase === PHASES.idle && (
+          <IdleScreen demoMode={demoMode} onStart={() => setPhase(PHASES.riding)} />
+        )}
 
-      {phase === PHASES.riding && (
-        <LiveRideScreen onEnd={() => setPhase(PHASES.summary)} />
-      )}
+        {phase === PHASES.riding && (
+          <LiveRideScreen onEnd={() => setPhase(PHASES.summary)} />
+        )}
 
-      {phase === PHASES.summary && (
-        <RideSummaryScreen onNewRide={() => setPhase(PHASES.idle)} />
-      )}
+        {phase === PHASES.summary && (
+          <RideSummaryScreen onNewRide={() => setPhase(PHASES.idle)} />
+        )}
+      </div>
     </div>
   );
 }
