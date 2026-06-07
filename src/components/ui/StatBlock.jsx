@@ -11,8 +11,19 @@ const VALUE_COLOR = {
   orange: 'text-orange-400',
 };
 
+const GLOW_HOVER = {
+  blue:   'hover:shadow-[0_0_18px_rgba(59,130,246,0.18)]',
+  cyan:   'hover:shadow-[0_0_18px_rgba(34,211,238,0.18)]',
+  amber:  'hover:shadow-[0_0_18px_rgba(245,158,11,0.18)]',
+  violet: 'hover:shadow-[0_0_18px_rgba(167,139,250,0.18)]',
+  green:  'hover:shadow-[0_0_18px_rgba(74,222,128,0.18)]',
+  red:    'hover:shadow-[0_0_18px_rgba(248,113,113,0.18)]',
+  orange: 'hover:shadow-[0_0_18px_rgba(251,146,60,0.18)]',
+};
+
 /**
  * Single metric tile — used in dashboards and admin pages.
+ * Hover: subtle lift + accent glow.
  */
 export default function StatBlock({
   label,
@@ -34,7 +45,9 @@ export default function StatBlock({
     <div
       className={cn(
         'glass-card rounded-xl border border-white/[0.07] p-5',
-        'hover:border-white/[0.15] transition-all duration-200',
+        'hover:border-white/[0.18] hover:scale-[1.015]',
+        'transition-all duration-200 ease-out cursor-default',
+        GLOW_HOVER[accent],
         glow && 'glow-blue',
       )}
       role="group"

@@ -14,7 +14,7 @@ export default function DemoBanner() {
       aria-live="polite"
       className="flex items-center justify-between gap-3 px-4 py-2.5
                  bg-violet-900/50 border-b-2 border-violet-500/40
-                 animate-[slideDown_0.2s_ease-out]"
+                 slide-down"
     >
       <div className="flex items-center gap-2.5 min-w-0">
         <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse flex-shrink-0" aria-hidden="true" />

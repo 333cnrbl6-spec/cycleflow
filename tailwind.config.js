@@ -54,5 +54,10 @@ module.exports = {
       }
     }
   },
+  safelist: [
+    // Animation classes applied conditionally / from JS — scanner can't see them
+    'slide-down', 'fade-in', 'tab-enter', 'page-enter', 'demo-fade',
+    'modal-overlay', 'modal-panel',
+  ],
   plugins: [require("tailwindcss-animate")],
 }

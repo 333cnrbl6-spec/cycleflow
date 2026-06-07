@@ -103,12 +103,13 @@ export default function TopBar({ user }) {
           aria-pressed={demoMode}
           title="Demo Mode: explore the app with sample data"
           className={`hidden sm:inline-flex items-center gap-2 px-3 min-h-[40px] rounded-lg
-                      text-[13px] font-semibold border-2 transition-all duration-150
+                      text-[13px] font-semibold border-2
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             demoMode
-              ? 'bg-violet-500/20 border-violet-500/50 text-violet-300 hover:bg-violet-500/25'
+              ? 'bg-violet-500/20 border-violet-500/50 text-violet-300 hover:bg-violet-500/30'
               : 'bg-transparent border-border/70 text-muted-foreground hover:text-foreground hover:border-white/30 hover:bg-white/[0.05]'
           }`}
+          style={{ transition: 'background-color 200ms cubic-bezier(0.22,1,0.36,1), border-color 200ms cubic-bezier(0.22,1,0.36,1), color 200ms cubic-bezier(0.22,1,0.36,1)' }}
         >
           <FlaskConical className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
           <span>Demo</span>

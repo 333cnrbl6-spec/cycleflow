@@ -80,6 +80,8 @@ export default function Dashboard() {
   const rideData    = demoMode ? data.rideHistory     : STATIC_RIDE_DATA;
   const recentRides = demoMode ? data.recentRides     : STATIC_RECENT_RIDES;
   const summary     = demoMode ? data.todaySummary    : { distance: '24.3', duration: '1:12', avgSpeed: '20.3', calories: '612' };
+  // key changes when demoMode flips so data sections re-animate
+  const demoKey = demoMode ? 'demo' : 'static';
 
   const now = new Date();
   const hour = now.getHours();
@@ -110,7 +112,7 @@ export default function Dashboard() {
       )}
 
       {/* Today's Ride Summary */}
-      <section className="mb-8 sm:mb-10">
+      <section key={`summary-${demoKey}`} className="mb-8 sm:mb-10 demo-fade">
         <SectionLabel accent="blue" label="Today's Ride Summary"
           right={<span className="text-[11px] font-semibold text-green-400 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" /> Live</span>}
         />
@@ -123,7 +125,7 @@ export default function Dashboard() {
       </section>
 
       {/* Ride History Graph */}
-      <section className="mb-8 sm:mb-10">
+      <section key={`history-${demoKey}`} className="mb-8 sm:mb-10 demo-fade">
         <SectionLabel accent="cyan" label="Ride History" right={<span className="text-sm text-muted-foreground">Last 7 days</span>} />
         <div className="glass-card rounded-xl border border-white/[0.06] p-4 sm:p-5">
           <ResponsiveContainer width="100%" height={200}>
@@ -153,7 +155,10 @@ export default function Dashboard() {
               key={label}
               to={path}
               aria-label={`${label}: ${desc}`}
-              className={`flex items-center gap-4 p-5 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] min-h-[72px] ${bg}`}
+              className={`flex items-center gap-4 p-5 rounded-xl border text-left min-h-[72px] ${bg}`}
+              style={{ transition: 'background-color 200ms cubic-bezier(0.22,1,0.36,1), border-color 200ms cubic-bezier(0.22,1,0.36,1), transform 200ms cubic-bezier(0.22,1,0.36,1), box-shadow 200ms cubic-bezier(0.22,1,0.36,1)' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px) scale(1.008)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.18)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
             >
               <div className={`p-3 rounded-xl bg-white/5 ${color} flex-shrink-0`}>
                 <Icon className="w-6 h-6" aria-hidden="true" />
@@ -169,7 +174,7 @@ export default function Dashboard() {
       </section>
 
       {/* Recent Rides */}
-      <section className="pb-6">
+      <section key={`rides-${demoKey}`} className="pb-6 demo-fade">
         <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
         <ErrorBoundary>
           <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">

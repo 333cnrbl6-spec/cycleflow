@@ -33,7 +33,7 @@ function InnerLayout({ user }) {
       {/* Mobile overlay backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-20 md:hidden"
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-20 md:hidden fade-in"
           onClick={() => setMobileOpen(false)}
           aria-hidden="true"
         />
