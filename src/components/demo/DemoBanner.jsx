@@ -2,8 +2,7 @@ import { FlaskConical, RefreshCw, X } from 'lucide-react';
 import { useDemo } from '@/lib/DemoContext';
 
 /**
- * Thin banner shown below the TopBar when Demo Mode is active.
- * Animates in/out with a smooth slide-down.
+ * Prominent banner shown below TopBar when Demo Mode is active.
  */
 export default function DemoBanner() {
   const { demoMode, toggleDemo, regenerate } = useDemo();
@@ -11,38 +10,44 @@ export default function DemoBanner() {
 
   return (
     <div
-      className="flex items-center justify-between gap-3 px-4 py-2
-                 bg-violet-500/10 border-b border-violet-500/25
-                 text-violet-300 text-xs font-medium select-none
+      role="status"
+      aria-live="polite"
+      className="flex items-center justify-between gap-3 px-4 py-2.5
+                 bg-violet-900/50 border-b-2 border-violet-500/40
                  animate-[slideDown_0.2s_ease-out]"
     >
-      <div className="flex items-center gap-2 min-w-0">
-        <FlaskConical className="w-3.5 h-3.5 flex-shrink-0 text-violet-400" />
-        <span className="truncate">
-          <span className="font-bold text-violet-200">Demo Mode</span>
+      <div className="flex items-center gap-2.5 min-w-0">
+        <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse flex-shrink-0" aria-hidden="true" />
+        <FlaskConical className="w-4 h-4 flex-shrink-0 text-violet-300" aria-hidden="true" />
+        <span className="text-sm font-medium text-violet-200 truncate">
+          <span className="font-bold">Demo Mode active</span>
           <span className="hidden sm:inline text-violet-300/80">
-            {' '}— all data is simulated client-side. No backend calls are made.
+            {' '}— all data is simulated. No backend calls are made.
           </span>
         </span>
       </div>
-      <div className="flex items-center gap-1 flex-shrink-0">
+
+      <div className="flex items-center gap-1.5 flex-shrink-0">
         <button
           onClick={regenerate}
-          title="Regenerate data"
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-md
-                     bg-violet-500/15 hover:bg-violet-500/30 text-violet-300
-                     transition-colors duration-150 text-[11px] font-semibold"
+          aria-label="Regenerate demo data"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg min-h-[36px]
+                     bg-violet-500/20 hover:bg-violet-500/35 text-violet-200
+                     text-xs font-semibold transition-colors duration-150
+                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
         >
-          <RefreshCw className="w-3 h-3" />
-          <span className="hidden sm:inline">Randomise</span>
+          <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
+          <span className="hidden sm:inline">Regenerate</span>
         </button>
         <button
           onClick={toggleDemo}
-          title="Exit demo mode"
-          className="p-1.5 rounded-md hover:bg-violet-500/20 text-violet-400
-                     transition-colors duration-150"
+          aria-label="Exit Demo Mode"
+          className="flex items-center justify-center w-9 h-9 rounded-lg min-h-[36px]
+                     hover:bg-violet-500/25 text-violet-300 hover:text-violet-100
+                     transition-colors duration-150
+                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
     </div>

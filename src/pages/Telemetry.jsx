@@ -126,7 +126,7 @@ export default function Telemetry() {
   }, [tick]);
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <PageHeader
         title="Telemetry"

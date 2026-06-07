@@ -26,32 +26,45 @@ export default function StatBlock({
   const TrendIcon =
     trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
   const trendColor =
-    trend === 'up' ? 'text-green-400' :
+    trend === 'up'   ? 'text-green-400' :
     trend === 'down' ? 'text-red-400' :
     'text-muted-foreground';
 
   return (
-    <div className={cn(
-      'glass-card rounded-xl border border-white/[0.06] p-4',
-      'hover:border-white/[0.14] transition-all duration-200',
-      glow && 'glow-blue',
-    )}>
-      <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest mb-2.5 font-heading leading-none">
+    <div
+      className={cn(
+        'glass-card rounded-xl border border-white/[0.07] p-5',
+        'hover:border-white/[0.15] transition-all duration-200',
+        glow && 'glow-blue',
+      )}
+      role="group"
+      aria-label={`${label}: ${value}${unit ? ' ' + unit : ''}`}
+    >
+      {/* Label */}
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3 font-heading leading-none">
         {label}
       </p>
 
-      <div className="flex items-end gap-1.5">
-        <span className={cn('text-[22px] font-bold font-mono leading-none transition-colors duration-300', VALUE_COLOR[accent])}>
+      {/* Value + unit */}
+      <div className="flex items-end gap-2">
+        <span className={cn(
+          'text-2xl font-bold font-mono leading-none transition-colors duration-300',
+          VALUE_COLOR[accent]
+        )}>
           {value}
         </span>
         {unit && (
-          <span className="text-[11px] text-muted-foreground/70 mb-0.5 leading-none">{unit}</span>
+          <span className="text-sm text-muted-foreground mb-0.5 leading-none">{unit}</span>
         )}
       </div>
 
+      {/* Trend */}
       {trendValue && (
-        <div className={cn('flex items-center gap-1 mt-2.5 text-[10px] font-medium', trendColor)}>
-          <TrendIcon className="w-3 h-3 flex-shrink-0" />
+        <div className={cn(
+          'flex items-center gap-1.5 mt-3 text-xs font-medium',
+          trendColor
+        )}>
+          <TrendIcon className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
           <span>{trendValue}</span>
         </div>
       )}

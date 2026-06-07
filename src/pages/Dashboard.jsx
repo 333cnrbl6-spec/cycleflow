@@ -88,7 +88,7 @@ export default function Dashboard() {
   const hasRides = recentRides.length > 0;
 
   return (
-    <div className="p-4 sm:p-6 page-enter">
+    <div className="page-enter">
       <PageHeader
         title={`${greeting}, ${firstName}`}
         subtitle="Here's your CycleFlow overview for today"

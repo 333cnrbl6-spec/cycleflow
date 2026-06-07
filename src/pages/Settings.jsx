@@ -79,7 +79,7 @@ export default function SettingsPage() {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 page-enter">
+    <div className="page-enter">
       <PageHeader title="Settings" subtitle="Manage your profile, preferences, and app configuration" icon={Settings} iconColor="text-slate-400" />
       <SubNav tabs={TABS} active={tab} onSelect={setTab} />
 

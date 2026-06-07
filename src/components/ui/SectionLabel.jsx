@@ -16,13 +16,18 @@ const BAR = {
  */
 export default function SectionLabel({ label, accent = 'blue', right, className }) {
   return (
-    <div className={cn('flex items-center gap-2.5 mb-4', className)}>
-      <div className={cn('w-0.5 h-3.5 rounded-full flex-shrink-0', BAR[accent])} />
-      <h2 className="text-[10.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground/65 font-heading leading-none">
+    <div className={cn('flex items-center gap-3 mb-5', className)}>
+      <div
+        className={cn('w-0.5 h-4 rounded-full flex-shrink-0', BAR[accent])}
+        aria-hidden="true"
+      />
+      <h2 className="text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground font-heading leading-none">
         {label}
       </h2>
       {right && (
-        <div className="ml-auto flex items-center gap-2">{right}</div>
+        <div className="ml-auto flex items-center gap-2">
+          {right}
+        </div>
       )}
     </div>
   );

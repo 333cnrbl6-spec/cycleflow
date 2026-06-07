@@ -81,7 +81,7 @@ export default function ClubHub() {
   });
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       <PageHeader title="Club Hub" subtitle="Rides, events, members, and club communications" icon={Users} iconColor="text-violet-400" />
       <SubNav tabs={TABS} active={tab} onSelect={t => { setTab(t); setSelected(null); }} />
 

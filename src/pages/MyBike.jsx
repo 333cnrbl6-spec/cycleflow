@@ -43,7 +43,7 @@ export default function MyBike() {
   const [tab, setTab] = useState('pairing');
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       <PageHeader title="My Bike" subtitle="Manage your bicycle, sensors, and maintenance" icon={Bike} />
       <SubNav tabs={TABS} active={tab} onSelect={setTab} />
 

@@ -46,7 +46,7 @@ export default function Routes() {
   const diffColor = (d) => d === 'Easy' ? 'bg-green-500/10 text-green-400' : d === 'Moderate' ? 'bg-amber-500/10 text-amber-400' : 'bg-red-500/10 text-red-400';
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       <PageHeader title="Routes" subtitle="Plan, explore, and manage your cycling routes" icon={Map} iconColor="text-blue-400" />
       <SubNav tabs={TABS} active={tab} onSelect={t => { setTab(t); setPlanStep(0); setSelected(null); }} />
 

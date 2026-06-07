@@ -124,7 +124,7 @@ export default function Safety() {
   });
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       <PageHeader title="Safety" subtitle="Checklists, live beacon, incident reporting, and emergency tools" icon={Shield} iconColor="text-green-400" />
       <SubNav tabs={TABS} active={tab} onSelect={setTab} />
 

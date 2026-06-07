@@ -84,7 +84,7 @@ export default function Training() {
   const tload = demoMode ? data.trainingLoad  : { tss7: 412, ctl: 68, atl: 81, tsb: -13 };
 
   return (
-    <div className="p-6 page-enter">
+    <div className="page-enter">
       <PageHeader
         title="Training"
         subtitle="Structured training plans, workout builder, and load tracking"

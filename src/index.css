@@ -4,218 +4,315 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════════════════════════════ */
 @layer base {
   :root {
+    /* Surfaces */
     --background:           215 28% 7%;
-    --foreground:           210 40% 98%;
+    --foreground:           210 40% 97%;
     --card:                 217 33% 10%;
-    --card-foreground:      210 40% 98%;
+    --card-foreground:      210 40% 97%;
     --popover:              217 33% 10%;
-    --popover-foreground:   210 40% 98%;
+    --popover-foreground:   210 40% 97%;
+
+    /* Brand */
     --primary:              217 91% 60%;
     --primary-foreground:   0 0% 100%;
-    --secondary:            217 33% 14%;
-    --secondary-foreground: 210 40% 98%;
-    --muted:                217 33% 14%;
-    --muted-foreground:     215 20% 55%;
+
+    /* Secondary / muted */
+    --secondary:            217 33% 15%;
+    --secondary-foreground: 210 40% 95%;
+    --muted:                217 33% 15%;
+    --muted-foreground:     215 20% 68%;   /* lifted for WCAG AA */
+
+    /* Accent (cyan) */
     --accent:               186 100% 42%;
     --accent-foreground:    215 28% 7%;
+
+    /* Destructive */
     --destructive:          0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border:               217 33% 17%;
-    --input:                217 33% 14%;
+
+    /* Borders / inputs */
+    --border:               217 33% 20%;  /* slightly lifted for visibility */
+    --input:                217 33% 15%;
     --ring:                 217 91% 60%;
+
+    /* Charts */
     --chart-1:              217 91% 60%;
     --chart-2:              186 100% 42%;
     --chart-3:              262 80% 65%;
     --chart-4:              43 96% 56%;
     --chart-5:              0 72% 51%;
-    --radius:               0.5rem;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
     --sidebar-bg:           217 40% 8%;
-    --sidebar-border:       217 33% 15%;
+    --sidebar-border:       217 33% 16%;
+
+    /* Typography */
     --font-heading: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-body:    'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+    /* Spacing scale */
+    --space-xs:   4px;
+    --space-sm:   8px;
+    --space-md:   16px;
+    --space-lg:   24px;
+    --space-xl:   32px;
+    --space-2xl:  48px;
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL BASE STYLES
+   ═══════════════════════════════════════════════════════════════ */
 @layer base {
-  * { @apply border-border outline-ring/50; }
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  /* Visible focus ring for ALL interactive elements — WCAG 2.2 AA */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
   body {
     @apply bg-background text-foreground font-body;
-    font-feature-settings: "cv11", "ss01";
+    font-size: 16px;          /* 12pt equivalent — above 14pt min */
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
-    line-height: 1.6;
+    font-feature-settings: "cv11", "ss01";
   }
-  /* Better select appearance on dark backgrounds */
-  select option { background-color: hsl(217 33% 12%); color: hsl(210 40% 98%); }
-  /* Age-friendly: lift muted text contrast globally */
-  .text-muted-foreground { color: hsl(215 20% 68%); }
-  /* Minimum tap targets */
-  button, a[role="button"], [role="tab"] { min-height: 44px; }
+
+  /* Larger base on mobile for readability */
+  @media (max-width: 640px) {
+    body { font-size: 17px; line-height: 1.7; }
+  }
+
+  /* Select styling on dark bg */
+  select option { background-color: hsl(217 33% 12%); color: hsl(210 40% 97%); }
+
+  /* Globally enforce muted-foreground contrast above WCAG AA */
+  .text-muted-foreground { color: hsl(215 20% 68%) !important; }
+
+  /* Minimum tap targets — 44 × 44 px (WCAG 2.5.5) */
+  button, a[role="button"], [role="tab"], [role="menuitem"] {
+    min-height: 44px;
+    min-width:  44px;
+  }
+
+  /* Headings — clear visual hierarchy */
+  h1 { @apply text-xl font-bold   text-foreground font-heading leading-tight; }
+  h2 { @apply text-lg font-semibold text-foreground font-heading leading-snug; }
+  h3 { @apply text-base font-semibold text-foreground font-heading leading-snug; }
+  h4 { @apply text-sm  font-semibold text-foreground font-heading; }
 }
 
-@media (max-width: 640px) {
-  body { font-size: 17px; line-height: 1.65; }
-}
-@media (min-width: 641px) and (max-width: 1024px) {
-  body { font-size: 16.5px; line-height: 1.6; }
-}
-
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT CLASSES
+   ═══════════════════════════════════════════════════════════════ */
 @layer components {
 
-  /* ── Glass card ─────────────────────────────────────── */
+  /* ── Glass card ─────────────────────────────────────────── */
   .glass-card {
     background: rgba(14, 20, 33, 0.88);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(51, 65, 85, 0.45);
+    border: 1px solid rgba(51, 65, 85, 0.5);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
+  .glass-card:hover {
+    border-color: rgba(51, 65, 85, 0.7);
+  }
 
-  /* ── Form controls ──────────────────────────────────── */
+  /* ── Form controls ──────────────────────────────────────── */
   .cf-input {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+    @apply w-full bg-white/[0.06] border border-border rounded-lg
+           px-4 py-3 min-h-[44px]
            text-sm text-foreground placeholder:text-muted-foreground/60
-           focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.07]
+           focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30
+           focus-visible:bg-white/[0.08]
            transition-all duration-150;
   }
   .cf-select {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+    @apply w-full bg-white/[0.06] border border-border rounded-lg
+           px-4 py-3 min-h-[44px]
            text-sm text-foreground
-           focus:outline-none focus:border-blue-500/60
+           focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30
            transition-all duration-150 cursor-pointer appearance-none;
   }
   .cf-textarea {
-    @apply w-full bg-white/5 border border-border rounded-lg px-3 py-2.5
+    @apply w-full bg-white/[0.06] border border-border rounded-lg
+           px-4 py-3
            text-sm text-foreground placeholder:text-muted-foreground/60
-           focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.07]
+           focus-visible:outline-none focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/30
+           focus-visible:bg-white/[0.08]
            resize-none transition-all duration-150;
   }
   .cf-label {
-    @apply block text-xs font-semibold text-muted-foreground mb-1.5 tracking-wide;
+    @apply block text-sm font-semibold text-foreground/80 mb-2 tracking-normal;
   }
 
-  /* ── Buttons ────────────────────────────────────────── */
+  /* ── Buttons ────────────────────────────────────────────── */
+  /* All buttons share: min 44px height, clear focus ring */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
-           px-5 py-3 rounded-xl min-h-[44px]
-           bg-blue-500 hover:bg-blue-600 active:bg-blue-700
+           px-5 py-3 rounded-xl min-h-[44px] min-w-[44px]
+           bg-blue-500 hover:bg-blue-400 active:bg-blue-600
            text-white text-sm font-semibold
-           transition-all duration-200 active:scale-[0.97]
-           focus:outline-none focus:ring-2 focus:ring-blue-500/40
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+           transition-all duration-150 active:scale-[0.97]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background
+           disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100;
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2
-           px-5 py-3 rounded-xl border border-border min-h-[44px]
-           bg-transparent text-foreground/80
-           hover:text-foreground hover:border-white/25 hover:bg-white/5
+           px-5 py-3 rounded-xl border border-border min-h-[44px] min-w-[44px]
+           bg-transparent text-foreground/85
+           hover:text-foreground hover:border-white/30 hover:bg-white/[0.06]
            text-sm font-medium
            transition-all duration-150 active:scale-[0.97]
-           focus:outline-none;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2
-           px-3 py-2.5 rounded-lg min-h-[44px]
-           text-foreground/75 hover:text-foreground hover:bg-white/5
+           px-3 py-3 rounded-lg min-h-[44px] min-w-[44px]
+           text-foreground/80 hover:text-foreground hover:bg-white/[0.06]
            text-sm font-medium
            transition-all duration-150
-           focus:outline-none;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2
-           px-5 py-3 rounded-xl min-h-[44px]
-           bg-red-500 hover:bg-red-600 active:bg-red-700
+           px-5 py-3 rounded-xl min-h-[44px] min-w-[44px]
+           bg-red-600 hover:bg-red-500 active:bg-red-700
            text-white text-sm font-semibold
            transition-all duration-150 active:scale-[0.97]
-           focus:outline-none focus:ring-2 focus:ring-red-500/40;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
   .btn-icon {
     @apply inline-flex items-center justify-center
-           w-11 h-11 rounded-lg
-           text-foreground/70 hover:text-foreground hover:bg-white/5
-           transition-all duration-150 focus:outline-none;
+           w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg
+           text-foreground/75 hover:text-foreground hover:bg-white/[0.06]
+           transition-all duration-150
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
   }
 
-  /* ── Section labels ─────────────────────────────────── */
+  /* ── Section labels ─────────────────────────────────────── */
   .section-label {
-    @apply flex items-center gap-2.5 mb-4;
+    @apply flex items-center gap-3 mb-5;
   }
   .section-label-bar {
-    @apply w-px h-4 rounded-full flex-shrink-0;
+    @apply w-0.5 h-4 rounded-full flex-shrink-0;
   }
   .section-label-text {
-    @apply text-[12px] font-bold uppercase tracking-widest text-muted-foreground font-heading;
+    @apply text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground font-heading;
   }
 
-  /* ── Tables ─────────────────────────────────────────── */
+  /* ── Tables ─────────────────────────────────────────────── */
   .cf-table { @apply w-full text-sm; }
-  .cf-table thead tr   { @apply border-b border-border/60; }
+  .cf-table thead tr   { @apply border-b border-border; }
   .cf-table thead th   {
-    @apply text-[11px] font-bold uppercase tracking-wider
-           text-muted-foreground py-3.5 px-4 whitespace-nowrap;
+    @apply text-xs font-bold uppercase tracking-wide
+           text-muted-foreground py-4 px-4 whitespace-nowrap text-left;
   }
   .cf-table tbody tr   {
-    @apply border-b border-border/20 hover:bg-white/[0.025] transition-colors duration-100;
+    @apply border-b border-border/30 hover:bg-white/[0.03] transition-colors duration-100;
   }
-  .cf-table tbody td   { @apply py-4 px-4 text-sm; }
+  .cf-table tbody td   { @apply py-4 px-4 text-sm text-foreground/90; }
   .cf-table tbody tr:last-child { @apply border-b-0; }
 
-  /* ── Badge pill ─────────────────────────────────────── */
+  /* ── Badge pill ─────────────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center gap-1 text-[10px] font-bold
-           px-2 py-0.5 rounded-full tracking-wide;
+    @apply inline-flex items-center gap-1 text-[11px] font-semibold
+           px-2.5 py-0.5 rounded-full tracking-normal;
   }
 
-  /* ── Responsive card grid ───────────────────────────── */
-  .card-grid { @apply grid gap-4; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  /* ── Responsive card grid ───────────────────────────────── */
+  .card-grid {
+    @apply grid gap-5;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  }
 
-  /* ── Modal overlay ──────────────────────────────────── */
+  /* ── Modal overlay / panel ──────────────────────────────── */
   .modal-overlay {
-    @apply fixed inset-0 bg-black/65 backdrop-blur-sm z-50
-           flex items-center justify-center p-4;
+    @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-50
+           flex items-end sm:items-center justify-center p-4;
   }
   .modal-panel {
-    @apply bg-card border border-border rounded-2xl w-full shadow-2xl page-enter;
+    @apply bg-card border border-border rounded-2xl w-full shadow-2xl page-enter
+           max-h-[90vh] overflow-y-auto;
   }
   .modal-header {
-    @apply flex items-center justify-between px-5 py-4 border-b border-border;
+    @apply flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-card z-10;
   }
-  .modal-body { @apply p-5 space-y-3; }
+  .modal-body { @apply p-6 space-y-5; }
 
-  /* ── Card divider ───────────────────────────────────── */
-  .card-divider { @apply border-t border-border/40 my-3; }
+  /* ── Card divider ───────────────────────────────────────── */
+  .card-divider { @apply border-t border-border/50 my-4; }
+
+  /* ── Page section wrapper ───────────────────────────────── */
+  .page-section { @apply space-y-5 mb-8; }
+
+  /* ── Stat card ──────────────────────────────────────────── */
+  .stat-card {
+    @apply glass-card rounded-xl border border-white/[0.07] p-5
+           flex flex-col gap-1;
+  }
+  .stat-label { @apply text-xs font-semibold uppercase tracking-wide text-muted-foreground; }
+  .stat-value { @apply text-2xl font-bold font-mono text-foreground; }
+  .stat-unit  { @apply text-sm text-muted-foreground font-normal; }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════ */
 @layer utilities {
 
-  /* ── Glows ──────────────────────────────────────────── */
-  .glow-blue { box-shadow: 0 0 24px rgba(59,130,246,0.18), 0 0 48px rgba(59,130,246,0.06); }
-  .glow-cyan { box-shadow: 0 0 24px rgba(34,211,238,0.18), 0 0 48px rgba(34,211,238,0.06); }
-  .glow-red  { box-shadow: 0 0 24px rgba(239,68,68,0.28),  0 0 48px rgba(239,68,68,0.10); }
+  /* ── Glows ──────────────────────────────────────────────── */
+  .glow-blue { box-shadow: 0 0 20px rgba(59,130,246,0.22), 0 0 40px rgba(59,130,246,0.08); }
+  .glow-cyan { box-shadow: 0 0 20px rgba(34,211,238,0.22), 0 0 40px rgba(34,211,238,0.08); }
+  .glow-red  { box-shadow: 0 0 20px rgba(239,68,68,0.30),  0 0 40px rgba(239,68,68,0.12); }
 
-  /* ── Sidebar state ──────────────────────────────────── */
+  /* ── Sidebar active link ────────────────────────────────── */
   .sidebar-active {
-    @apply bg-blue-500/10 text-blue-400 border-l-2 border-blue-500;
+    @apply bg-blue-500/12 text-blue-400 border-l-2 border-blue-500;
   }
 
-  /* ── Animations ─────────────────────────────────────── */
+  /* ── Animations ─────────────────────────────────────────── */
   .metric-glow { animation: metricPulse 3s ease-in-out infinite; }
   @keyframes metricPulse {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.72; }
+    50%       { opacity: 0.75; }
   }
-  .page-enter { animation: pageEnter 0.25s cubic-bezier(0.22, 1, 0.36, 1); }
+
+  .page-enter { animation: pageEnter 0.22s cubic-bezier(0.22, 1, 0.36, 1) both; }
   @keyframes pageEnter {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── Skeleton shimmer ───────────────────────────────── */
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tab-enter { animation: tabEnter 0.18s ease-out both; }
+  @keyframes tabEnter {
+    from { opacity: 0; transform: translateX(4px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── Skeleton shimmer ───────────────────────────────────── */
   @keyframes shimmer {
     from { background-position: -200% 0; }
     to   { background-position:  200% 0; }
@@ -224,37 +321,26 @@
     background: linear-gradient(
       90deg,
       rgba(255,255,255,0.03) 0%,
-      rgba(255,255,255,0.07) 50%,
+      rgba(255,255,255,0.08) 50%,
       rgba(255,255,255,0.03) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 1.6s ease-in-out infinite;
   }
 
-  /* ── Fade-slide transitions for tab panels ──────────── */
-  .tab-enter { animation: tabEnter 0.18s ease-out; }
-  @keyframes tabEnter {
-    from { opacity: 0; transform: translateX(4px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
+  /* ── High Contrast Mode ─────────────────────────────────── */
+  .high-contrast .text-muted-foreground   { color: hsl(210 40% 82%) !important; }
+  .high-contrast body                     { color: hsl(0 0% 98%); }
+  .high-contrast .glass-card              { border-color: rgba(255,255,255,0.28) !important; }
+  .high-contrast .cf-table thead th       { color: hsl(210 40% 88%) !important; }
+  .high-contrast .btn-ghost,
+  .high-contrast .btn-icon                { color: hsl(210 40% 82%) !important; }
+  .high-contrast .border-border           { border-color: rgba(255,255,255,0.22) !important; }
 
-  /* ── High Contrast Mode ─────────────────────────────── */
-  .high-contrast .text-muted-foreground { color: hsl(210 40% 80%) !important; }
-  .high-contrast body { color: hsl(0 0% 98%); }
-  .high-contrast .glass-card { border-color: rgba(255,255,255,0.25) !important; }
-  .high-contrast .cf-table thead th { color: hsl(210 40% 85%) !important; }
-  .high-contrast .btn-ghost, .high-contrast .btn-icon { color: hsl(210 40% 80%) !important; }
-
-  /* ── slideDown (for DemoBanner) ─────────────────────── */
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Scrollbars ─────────────────────────────────────── */
-  .scrollbar-thin::-webkit-scrollbar       { width: 4px; height: 4px; }
+  /* ── Scrollbars ─────────────────────────────────────────── */
+  .scrollbar-thin::-webkit-scrollbar       { width: 5px; height: 5px; }
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(51,65,85,0.55); border-radius: 9999px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(51,65,85,0.6); border-radius: 9999px; }
   .scrollbar-none::-webkit-scrollbar       { display: none; }
-  .scrollbar-none { scrollbar-width: none; }
+  .scrollbar-none                          { scrollbar-width: none; }
 }
