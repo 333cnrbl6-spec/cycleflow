@@ -88,7 +88,7 @@ export default function Dashboard() {
   const hasRides = recentRides.length > 0;
 
   return (
-    <div className="p-6 page-enter">
+    <div className="p-4 sm:p-6 page-enter">
       <PageHeader
         title={`${greeting}, ${firstName}`}
         subtitle="Here's your CycleFlow overview for today"
@@ -110,11 +110,11 @@ export default function Dashboard() {
       )}
 
       {/* Today's Ride Summary */}
-      <section className="mb-8">
+      <section className="mb-8 sm:mb-10">
         <SectionLabel accent="blue" label="Today's Ride Summary"
-          right={<span className="text-[10px] font-semibold text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded-full flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse inline-block" /> Live</span>}
+          right={<span className="text-[11px] font-semibold text-green-400 bg-green-500/10 border border-green-500/20 px-2.5 py-1 rounded-full flex items-center gap-1.5"><span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" /> Live</span>}
         />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatBlock label="Distance"  value={String(summary.distance)} unit="km"   accent="blue"  trend="up" trendValue="+8% vs yesterday" />
           <StatBlock label="Duration"  value={String(summary.duration)} unit="hr"   accent="cyan" />
           <StatBlock label="Avg Speed" value={String(summary.avgSpeed)} unit="km/h" accent="blue"  trend="up" trendValue="+1.2 km/h" />
@@ -123,10 +123,10 @@ export default function Dashboard() {
       </section>
 
       {/* Ride History Graph */}
-      <section className="mb-8">
-        <SectionLabel accent="cyan" label="Ride History" right={<span className="text-xs text-muted-foreground">Last 7 days</span>} />
-        <div className="glass-card rounded-xl border border-white/[0.06] p-5">
-          <ResponsiveContainer width="100%" height={180}>
+      <section className="mb-8 sm:mb-10">
+        <SectionLabel accent="cyan" label="Ride History" right={<span className="text-sm text-muted-foreground">Last 7 days</span>} />
+        <div className="glass-card rounded-xl border border-white/[0.06] p-4 sm:p-5">
+          <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={rideData}>
               <defs>
                 <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
@@ -145,31 +145,32 @@ export default function Dashboard() {
       </section>
 
       {/* Quick Actions */}
-      <section className="mb-8">
+      <section className="mb-8 sm:mb-10">
         <SectionLabel accent="violet" label="Quick Actions" />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {QUICK_ACTIONS.map(({ icon: Icon, label, desc, color, bg, path }) => (
             <Link
               key={label}
               to={path}
-              className={`flex items-center gap-4 p-4 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] ${bg}`}
+              aria-label={`${label}: ${desc}`}
+              className={`flex items-center gap-4 p-5 rounded-xl border text-left transition-all duration-200 hover:scale-[1.01] min-h-[72px] ${bg}`}
             >
-              <div className={`p-2.5 rounded-xl bg-white/5 ${color} flex-shrink-0`}>
-                <Icon className="w-5 h-5" />
+              <div className={`p-3 rounded-xl bg-white/5 ${color} flex-shrink-0`}>
+                <Icon className="w-6 h-6" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground">{label}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+                <p className="text-[15px] font-semibold text-foreground">{label}</p>
+                <p className="text-sm text-muted-foreground mt-0.5 leading-snug">{desc}</p>
               </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" aria-hidden="true" />
             </Link>
           ))}
         </div>
       </section>
 
       {/* Recent Rides */}
-      <section>
-        <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
+      <section className="pb-6">
+        <SectionLabel accent="amber" label="Recent Rides" right={<Link to="/routes" className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">View all →</Link>} />
         <ErrorBoundary>
           <div className="glass-card rounded-xl border border-white/[0.06] overflow-hidden">
             {hasRides ? (

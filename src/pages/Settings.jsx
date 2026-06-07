@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Settings, User, SlidersHorizontal, Smartphone, Lock, Palette, ChevronRight, Sun, Moon, Globe, WifiOff, RefreshCw, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Settings, User, SlidersHorizontal, Smartphone, Lock, Palette, ChevronRight, Sun, Moon, Globe, WifiOff, RefreshCw, Upload, Type, Eye } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
@@ -45,6 +45,8 @@ export default function SettingsPage() {
   const [tab, setTab] = useState('profile');
   const [units, setUnits] = useState('metric');
   const [theme, setTheme] = useState('dark');
+  const [textSize, setTextSize] = useState(() => localStorage.getItem('cf-text-size') || 'standard');
+  const [highContrast, setHighContrast] = useState(() => localStorage.getItem('cf-high-contrast') === 'true');
   const [privacyToggles, setPrivacyToggles] = useState({
     shareActivity: true,
     locationTracking: true,
@@ -54,13 +56,35 @@ export default function SettingsPage() {
 
   const togglePrivacy = (key) => setPrivacyToggles(p => ({ ...p, [key]: !p[key] }));
 
+  const applyTextSize = (size) => {
+    setTextSize(size);
+    localStorage.setItem('cf-text-size', size);
+    const sizes = { standard: '16px', large: '18px', 'extra-large': '20px' };
+    document.documentElement.style.fontSize = sizes[size];
+  };
+
+  const applyHighContrast = (val) => {
+    setHighContrast(val);
+    localStorage.setItem('cf-high-contrast', val);
+    document.documentElement.classList.toggle('high-contrast', val);
+  };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('cf-text-size') || 'standard';
+    const sizes = { standard: '16px', large: '18px', 'extra-large': '20px' };
+    document.documentElement.style.fontSize = sizes[saved];
+    if (localStorage.getItem('cf-high-contrast') === 'true') {
+      document.documentElement.classList.add('high-contrast');
+    }
+  }, []);
+
   return (
-    <div className="p-6 page-enter">
+    <div className="p-4 sm:p-6 page-enter">
       <PageHeader title="Settings" subtitle="Manage your profile, preferences, and app configuration" icon={Settings} iconColor="text-slate-400" />
       <SubNav tabs={TABS} active={tab} onSelect={setTab} />
 
       {tab === 'profile' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <PlaceholderCard title="Personal Information" description="Your profile and identity details" icon={User} accent="blue">
             <div className="mt-4 flex items-center gap-4 mb-5 p-3 rounded-lg bg-white/5">
               <div className="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
@@ -194,38 +218,75 @@ export default function SettingsPage() {
       )}
 
       {tab === 'theme' && (
-        <div className="max-w-sm space-y-4">
+        <div className="max-w-lg space-y-4">
           <PlaceholderCard title="App Theme" description="Choose your preferred visual theme" icon={Palette} accent="violet">
             <div className="mt-4 space-y-3">
               {[
-                { id: 'dark', label: 'Dark', desc: 'SynergyFlow enterprise dark — default', icon: Moon },
+                { id: 'dark', label: 'Dark', desc: 'CycleFlow dark — default', icon: Moon },
                 { id: 'light', label: 'Light', desc: 'Light mode (coming soon)', icon: Sun, disabled: true },
-              ].map(({ id, label, desc, icon: ThemeIcon, disabled }) => (
+              ].map(({ id, label, desc, icon: TIcon, disabled }) => (
                 <button
                   key={id}
                   disabled={disabled}
                   onClick={() => !disabled && setTheme(id)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-lg border text-left transition-all ${
+                  aria-pressed={theme === id}
+                  className={`w-full flex items-center gap-4 p-4 rounded-lg border text-left transition-all min-h-[60px] ${
                     theme === id ? 'border-blue-500/50 bg-blue-500/10' :
                     disabled ? 'border-white/5 opacity-40 cursor-not-allowed' :
                     'border-white/10 hover:border-white/20'
                   }`}
                 >
                   <div className={`p-2 rounded-lg ${theme === id ? 'bg-blue-500/20 text-blue-400' : 'bg-white/5 text-muted-foreground'}`}>
-                    <ThemeIcon className="w-4 h-4" />
+                    <TIcon className="w-4 h-4" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">{label}</p>
-                    <p className="text-xs text-muted-foreground">{desc}</p>
+                    <p className="text-sm text-muted-foreground">{desc}</p>
                   </div>
-                  {theme === id && <span className="ml-auto text-xs text-blue-400">Active</span>}
+                  {theme === id && <span className="ml-auto text-xs text-blue-400 font-semibold">Active</span>}
                   {disabled && <span className="ml-auto text-xs text-muted-foreground">Soon</span>}
                 </button>
               ))}
             </div>
           </PlaceholderCard>
+
+          {/* Text Size */}
+          <PlaceholderCard title="Text Size" description="Adjust the font size across the whole app" icon={Type} accent="cyan">
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              {[
+                { id: 'standard',    label: 'Standard',    sample: 'Aa' },
+                { id: 'large',       label: 'Large',       sample: 'Aa' },
+                { id: 'extra-large', label: 'Extra Large', sample: 'Aa' },
+              ].map(({ id, label, sample }) => (
+                <button
+                  key={id}
+                  onClick={() => applyTextSize(id)}
+                  aria-pressed={textSize === id}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-all min-h-[80px] ${
+                    textSize === id ? 'border-blue-500/50 bg-blue-500/10 text-blue-400' : 'border-white/10 bg-white/5 text-muted-foreground hover:border-white/20'
+                  }`}
+                >
+                  <span className={`font-bold ${id === 'standard' ? 'text-lg' : id === 'large' ? 'text-2xl' : 'text-3xl'}`}>{sample}</span>
+                  <span className="text-xs font-medium">{label}</span>
+                </button>
+              ))}
+            </div>
+          </PlaceholderCard>
+
+          {/* High Contrast */}
+          <PlaceholderCard title="Accessibility" description="Visual accessibility options" icon={Eye} accent="amber">
+            <div className="mt-3">
+              <Toggle
+                label="High Contrast Mode"
+                description="Increase text and border contrast for easier reading"
+                checked={highContrast}
+                onChange={applyHighContrast}
+              />
+            </div>
+          </PlaceholderCard>
+
           <div className="glass-card rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
-            <p className="text-xs text-blue-400">CycleFlow is part of the SynergyFlow ecosystem. Theme changes will synchronise across all connected SynergyFlow apps in a future release.</p>
+            <p className="text-sm text-blue-400">Text size and contrast settings are saved locally on this device.</p>
           </div>
         </div>
       )}

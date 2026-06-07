@@ -62,35 +62,44 @@ export default function TopBar({ user }) {
 
       {/* ── Right controls ── */}
       <div className="flex items-center gap-0.5 flex-shrink-0">
-        <button className="btn-icon" title="Search">
-          <Search className="w-4 h-4" />
+        <button className="btn-icon" title="Search" aria-label="Search">
+          <Search className="w-4 h-4" aria-hidden="true" />
         </button>
-        <button className="btn-icon relative" title="Notifications">
-          <Bell className="w-4 h-4" />
+        <button className="btn-icon relative" title="Notifications" aria-label="Notifications">
+          <Bell className="w-4 h-4" aria-hidden="true" />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-blue-500 rounded-full ring-1 ring-background" />
         </button>
-        <button className="btn-icon hidden sm:inline-flex" title="Help">
-          <HelpCircle className="w-4 h-4" />
+        <button className="btn-icon hidden sm:inline-flex" title="Help" aria-label="Help">
+          <HelpCircle className="w-4 h-4" aria-hidden="true" />
         </button>
 
-        {/* Demo Mode toggle */}
+        {/* Demo Mode toggle — icon-only on mobile */}
         <button
           onClick={toggleDemo}
-          title={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
-          className={`btn-icon sm:hidden ${demoMode ? 'text-violet-400' : 'text-muted-foreground'}`}
+          title="Demo Mode: Explore the app with sample data"
+          aria-label={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode: Explore the app with sample data'}
+          aria-pressed={demoMode}
+          className={`sm:hidden btn-icon border transition-all duration-150 ${
+            demoMode
+              ? 'bg-violet-500/20 border-violet-500/40 text-violet-300'
+              : 'border-transparent text-muted-foreground'
+          }`}
         >
-          <FlaskConical className="w-4 h-4" />
+          <FlaskConical className="w-4 h-4" aria-hidden="true" />
         </button>
+        {/* Demo Mode toggle — labelled on desktop */}
         <button
           onClick={toggleDemo}
-          title={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
-          className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-[11px] font-semibold border transition-all duration-150 ${
+          title="Demo Mode: Explore the app with sample data"
+          aria-label={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
+          aria-pressed={demoMode}
+          className={`hidden sm:inline-flex items-center gap-1.5 px-3 min-h-[40px] rounded-lg text-[12px] font-semibold border transition-all duration-150 ${
             demoMode
               ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 hover:bg-violet-500/30'
               : 'bg-transparent border-border text-muted-foreground hover:text-foreground hover:border-white/25 hover:bg-white/5'
           }`}
         >
-          <FlaskConical className="w-3 h-3 flex-shrink-0" />
+          <FlaskConical className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
           Demo
         </button>
 

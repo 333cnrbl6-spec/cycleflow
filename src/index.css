@@ -47,9 +47,22 @@
     font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    line-height: 1.6;
   }
   /* Better select appearance on dark backgrounds */
   select option { background-color: hsl(217 33% 12%); color: hsl(210 40% 98%); }
+  /* Age-friendly: lift muted text contrast globally */
+  .text-muted-foreground { color: hsl(215 20% 68%); }
+  /* Minimum tap targets */
+  button, a[role="button"], [role="tab"] { min-height: 44px; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 17px; line-height: 1.65; }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  body { font-size: 16.5px; line-height: 1.6; }
 }
 
 @layer components {
@@ -89,7 +102,7 @@
   /* ── Buttons ────────────────────────────────────────── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
-           px-4 py-2.5 rounded-xl
+           px-5 py-3 rounded-xl min-h-[44px]
            bg-blue-500 hover:bg-blue-600 active:bg-blue-700
            text-white text-sm font-semibold
            transition-all duration-200 active:scale-[0.97]
@@ -98,8 +111,8 @@
   }
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2
-           px-4 py-2.5 rounded-xl border border-border
-           bg-transparent text-muted-foreground
+           px-5 py-3 rounded-xl border border-border min-h-[44px]
+           bg-transparent text-foreground/80
            hover:text-foreground hover:border-white/25 hover:bg-white/5
            text-sm font-medium
            transition-all duration-150 active:scale-[0.97]
@@ -107,15 +120,15 @@
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2
-           px-3 py-2 rounded-lg
-           text-muted-foreground hover:text-foreground hover:bg-white/5
+           px-3 py-2.5 rounded-lg min-h-[44px]
+           text-foreground/75 hover:text-foreground hover:bg-white/5
            text-sm font-medium
            transition-all duration-150
            focus:outline-none;
   }
   .btn-danger {
     @apply inline-flex items-center justify-center gap-2
-           px-4 py-2.5 rounded-xl
+           px-5 py-3 rounded-xl min-h-[44px]
            bg-red-500 hover:bg-red-600 active:bg-red-700
            text-white text-sm font-semibold
            transition-all duration-150 active:scale-[0.97]
@@ -123,8 +136,8 @@
   }
   .btn-icon {
     @apply inline-flex items-center justify-center
-           w-8 h-8 rounded-lg
-           text-muted-foreground hover:text-foreground hover:bg-white/5
+           w-11 h-11 rounded-lg
+           text-foreground/70 hover:text-foreground hover:bg-white/5
            transition-all duration-150 focus:outline-none;
   }
 
@@ -136,20 +149,20 @@
     @apply w-px h-4 rounded-full flex-shrink-0;
   }
   .section-label-text {
-    @apply text-[11px] font-bold uppercase tracking-widest text-muted-foreground/70 font-heading;
+    @apply text-[12px] font-bold uppercase tracking-widest text-muted-foreground font-heading;
   }
 
   /* ── Tables ─────────────────────────────────────────── */
   .cf-table { @apply w-full text-sm; }
   .cf-table thead tr   { @apply border-b border-border/60; }
   .cf-table thead th   {
-    @apply text-[10px] font-bold uppercase tracking-wider
-           text-muted-foreground/70 py-3 px-4 whitespace-nowrap;
+    @apply text-[11px] font-bold uppercase tracking-wider
+           text-muted-foreground py-3.5 px-4 whitespace-nowrap;
   }
   .cf-table tbody tr   {
     @apply border-b border-border/20 hover:bg-white/[0.025] transition-colors duration-100;
   }
-  .cf-table tbody td   { @apply py-3 px-4; }
+  .cf-table tbody td   { @apply py-4 px-4 text-sm; }
   .cf-table tbody tr:last-child { @apply border-b-0; }
 
   /* ── Badge pill ─────────────────────────────────────── */
@@ -157,6 +170,9 @@
     @apply inline-flex items-center gap-1 text-[10px] font-bold
            px-2 py-0.5 rounded-full tracking-wide;
   }
+
+  /* ── Responsive card grid ───────────────────────────── */
+  .card-grid { @apply grid gap-4; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
 
   /* ── Modal overlay ──────────────────────────────────── */
   .modal-overlay {
@@ -221,6 +237,13 @@
     from { opacity: 0; transform: translateX(4px); }
     to   { opacity: 1; transform: translateX(0); }
   }
+
+  /* ── High Contrast Mode ─────────────────────────────── */
+  .high-contrast .text-muted-foreground { color: hsl(210 40% 80%) !important; }
+  .high-contrast body { color: hsl(0 0% 98%); }
+  .high-contrast .glass-card { border-color: rgba(255,255,255,0.25) !important; }
+  .high-contrast .cf-table thead th { color: hsl(210 40% 85%) !important; }
+  .high-contrast .btn-ghost, .high-contrast .btn-icon { color: hsl(210 40% 80%) !important; }
 
   /* ── slideDown (for DemoBanner) ─────────────────────── */
   @keyframes slideDown {
