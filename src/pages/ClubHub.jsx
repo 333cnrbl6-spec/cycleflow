@@ -5,9 +5,11 @@ import SectionLabel from '@/components/ui/SectionLabel';
 import PageHeader from '@/components/ui/PageHeader';
 import SubNav from '@/components/ui/SubNav';
 import PlaceholderCard from '@/components/ui/PlaceholderCard';
+import ClubCalendar from '@/components/clubhub/ClubCalendar';
 
 const TABS = [
   { id: 'announcements', label: 'Announcements',   icon: Bell },
+  { id: 'calendar',      label: 'Ride Calendar',   icon: Calendar },
   { id: 'events',        label: 'Club Events',     icon: Calendar },
   { id: 'leaderboard',   label: 'Leaderboard',     icon: Trophy },
   { id: 'members',       label: 'Membership',      icon: Users },
@@ -104,6 +106,9 @@ export default function ClubHub() {
           ))}
         </div>
       )}
+
+      {/* ── Ride Calendar ── */}
+      {tab === 'calendar' && <ClubCalendar />}
 
       {/* ── Events ── */}
       {tab === 'events' && !selectedEvent && (
