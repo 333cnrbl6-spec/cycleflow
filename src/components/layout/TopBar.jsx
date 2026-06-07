@@ -77,6 +77,13 @@ export default function TopBar({ user }) {
         <button
           onClick={toggleDemo}
           title={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
+          className={`btn-icon sm:hidden ${demoMode ? 'text-violet-400' : 'text-muted-foreground'}`}
+        >
+          <FlaskConical className="w-4 h-4" />
+        </button>
+        <button
+          onClick={toggleDemo}
+          title={demoMode ? 'Exit Demo Mode' : 'Enable Demo Mode'}
           className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 h-8 rounded-lg text-[11px] font-semibold border transition-all duration-150 ${
             demoMode
               ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 hover:bg-violet-500/30'
